@@ -1,0 +1,4 @@
+.main-view {
+  flex-grow: 1; /* Take the remaining width */
+  background-color: #fff; /* Example background color */
+}

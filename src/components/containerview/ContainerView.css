@@ -1,0 +1,4 @@
+.container-view {
+  flex-grow: 1; /* Take the remaining width */
+  background-color: #f7f7f7;
+}

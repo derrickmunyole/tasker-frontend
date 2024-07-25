@@ -4,7 +4,8 @@
     padding: 30px 72px;
     height: var(--navbar-height);
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: #F2F1F1 1px solid;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   }
 
   .navbar h1 {

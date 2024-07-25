@@ -1,0 +1,71 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    height: 100%;
+    border-right: #F2F1F1 1px solid;
+    padding-left: 2rem;
+  }
+  
+  .top-section,
+  .bottom-section {
+    padding: 20px;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 10px 0;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+
+  li button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer
+  }
+  
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .sidebar .bottom-section .create-project-link {
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: inherit;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .sidebar .bottom-section .create-project-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #3182ce; /* You can adjust this color to match your theme */
+  }
+  
+  .sidebar .bottom-section .create-project-link:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Remove focus outline */
+  .sidebar .bottom-section .create-project-link:focus {
+    outline: none;
+  }
+  
+  /* Optional: Add a custom focus style if needed for accessibility */
+  .sidebar .bottom-section .create-project-link:focus-visible {
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.6);
+  }
+  
+  
+  

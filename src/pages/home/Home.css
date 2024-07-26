@@ -1,0 +1,73 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 4rem;
+}
+
+.overview {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    gap: 3rem;
+}
+
+.at-a-glance {
+    display: flex;
+    flex-direction: column;
+    width: 21rem;
+    height: 21rem;
+    border: #E8E6F9 1px solid;
+    border-radius: 16px;
+    background: linear-gradient(#21469B, #03134A);
+    color: #fff;
+    padding: 1rem;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 6rem;
+}
+
+.quick-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+    width: 40rem;
+    height: 21rem;
+    border: #E8E6F9 1px solid;
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.activity-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.feed {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}

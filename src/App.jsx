@@ -1,33 +1,49 @@
 import './App.css'
-import { BrowserRouter, Routes, Route, Navigate  } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react';
 import RegistrationPage from './pages/registration/Registration'
 import LoginPage from './pages/login/Login'
-import Navbar from './components/navbar/Navbar';
-
-import MainPage from './pages/main/MainPage'
-
+import MainPage from './layouts/main/MainPage'
+import Home from './pages/home/Home'
+import { useState, useEffect } from 'react';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const isAuthenticated = () => {
-    // Replace this with actual authentication logic
-    return localStorage.getItem('token') ? true : false;
-  };
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      console.log('Token from localStorage:', token);
+      setIsAuthenticated(!!token);
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isLoading) {
+    return <div style={{width:100,height:100, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>Loading...</div>; // Or a loading spinner
+  }
 
   return (
     <ChakraProvider>
       <BrowserRouter basename="/">
-        <Navbar />
         <Routes>
-          <Route exact path="/login" element={<LoginPage />} />
-          <Route exact path="/register" element={<RegistrationPage />} />
-          <Route exact path='/' element={<MainPage />} />
-         {/*<Route exact path="/" element={isAuthenticated() ? <Navigate to="/login" /> : <Navigate to="/register" />} /> */}
+          <Route element={
+            isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />
+          }>
+            <Route path="/home" element={<Home />} />
+            {/* Add other authenticated routes here */}
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegistrationPage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
-  )
+  );
 }
 
+
 export default App
+

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Input, Button, VStack, HStack, Text } from '@chakra-ui/react';
-import TextInput from '../../components/textinput/TextInput';
 import './Login.css';
 
 const Login = () => {
@@ -43,7 +42,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 isInvalid={!!errors.email}
-                errorContent={<Text color="red.500">{errors.email}</Text>}
+                errorcontent={<Text color="red.500">{errors.email}</Text>}
             />
             <Input
                 type="password"
@@ -51,7 +50,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 isInvalid={!!errors.password}
-                errorContent={<Text color="red.500">{errors.password}</Text>}
+                errorcontent={<Text color="red.500">{errors.password}</Text>}
             />
             <Button onClick={handleSubmit} mt={4} colorScheme='blue'>Login</Button>
             <HStack justifyContent="center">

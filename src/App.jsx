@@ -5,55 +5,39 @@ import RegistrationPage from './pages/registration/Registration'
 import LoginPage from './pages/login/Login'
 import MainPage from './layouts/main/MainPage'
 import Home from './pages/home/Home'
-import { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Make a request to your server to check if the user is authenticated
-        const response = await fetch('http://localhost:5000/api/user/check-auth', {
-          credentials: 'include',
-        });
-        const data = await response.json();
-        setIsAuthenticated(data.isAuthenticated);
-      } catch (error) {
-        console.error('Auth check failed', error);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-
-    checkAuth();
-  }, []);
+function AppRoutes() {
+  const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div style={{width:100,height:100, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>Loading...</div>; // Or a loading spinner
+    return <div style={{width:100,height:100, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>Loading...</div>;
   }
 
   return (
+    <Routes>
+      <Route element={
+        isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />
+      }>
+        <Route path="/home" element={<Home />} />
+        {/* Add other authenticated routes here */}
+      </Route>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegistrationPage />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
     <ChakraProvider>
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route element={
-            isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />
-          }>
-            <Route path="/home" element={<Home />} />
-            {/* Add other authenticated routes here */}
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter basename="/">
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </ChakraProvider>
   );
 }
 
-
 export default App
-

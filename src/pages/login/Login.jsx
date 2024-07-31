@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { Input, Button, VStack, HStack, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom'
 import './Login.css';
+import {loginUser} from '../../api/auth'
+import { useAuth } from '../../contexts/AuthContext';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
+    const { setIsAuthenticated } = useAuth();
+
+    const navigate = useNavigate()
 
     const validate = () => {
         const errors = {};
@@ -20,11 +27,25 @@ const Login = () => {
         return errors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        console.log('submitting...')
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length === 0) {
-            // Proceed with form submission
+            try {
+                const response = await loginUser(email, password);
+
+                console.log(response)
+
+                if (response.data.success) {
+                    setIsAuthenticated(true);
+                    navigate('/home');
+                } else {
+                    setErrors({ ...errors, login: 'Login failed. Please try again.' });
+                }
+            } catch (error) {
+                setErrors({ ...errors, login: 'Login failed. Please try again.' });
+            }
         } else {
             setErrors(validationErrors);
         }
@@ -32,32 +53,34 @@ const Login = () => {
 
     return (
         <div className='container'>
-            <VStack spacing={4}>
-            <HStack>
-                <Text fontSize="xl">Welcome!</Text>
-            </HStack>
-            <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                isInvalid={!!errors.email}
-                errorcontent={<Text color="red.500">{errors.email}</Text>}
-            />
-            <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                isInvalid={!!errors.password}
-                errorcontent={<Text color="red.500">{errors.password}</Text>}
-            />
-            <Button onClick={handleSubmit} mt={4} colorScheme='blue'>Login</Button>
-            <HStack justifyContent="center">
-                <Text>Don't have an account?</Text>
-                <Text as="a" href="/register">Create one</Text>
-            </HStack>
-        </VStack>
+            <form onSubmit={handleSubmit}>
+                <VStack spacing={4}>
+                    <HStack>
+                        <Text fontSize="xl">Welcome!</Text>
+                    </HStack>
+                    <Input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        isInvalid={!!errors.email}
+                    />
+                    {errors.email && <Text color="red.500">{errors.email}</Text>}
+                    <Input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        isInvalid={!!errors.password}
+                    />
+                    {errors.password && <Text color="red.500">{errors.password}</Text>}
+                    <Button type="submit" mt={4} colorScheme='blue'>Login</Button>
+                    <HStack justifyContent="center">
+                        <Text>Don't have an account?</Text>
+                        <Text as="a" href="/register">Create one</Text>
+                    </HStack>
+                </VStack>
+            </form>
         </div>
     );
 };

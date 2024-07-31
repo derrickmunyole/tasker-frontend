@@ -12,12 +12,22 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
-      console.log('Token from localStorage:', token);
-      setIsAuthenticated(!!token);
-      setIsLoading(false);
+    const checkAuth = async () => {
+      try {
+        // Make a request to your server to check if the user is authenticated
+        const response = await fetch('http://localhost:5000/api/user/check-auth', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
+      } catch (error) {
+        console.error('Auth check failed', error);
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
     };
+
 
     checkAuth();
   }, []);

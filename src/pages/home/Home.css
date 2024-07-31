@@ -2,7 +2,8 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 4rem;
+    width: 80vw;
+    padding: 4rem 8rem;
 }
 
 .overview {
@@ -16,8 +17,8 @@
 .at-a-glance {
     display: flex;
     flex-direction: column;
-    width: 21rem;
-    height: 21rem;
+    width: 24%;
+    height: 100%;
     border: #E8E6F9 1px solid;
     border-radius: 16px;
     background: linear-gradient(#21469B, #03134A);
@@ -53,7 +54,7 @@
 .activity-feed {
     display: flex;
     flex-direction: column;
-    width: 40rem;
+    width: 70%;
     height: 21rem;
     border: #E8E6F9 1px solid;
     border-radius: 16px;
@@ -70,4 +71,11 @@
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
+}
+
+.active-project-header {
+    display: flex;
+    flex-direction: row;
+    gap: 8;
+    margin-top: 4rem;
 }

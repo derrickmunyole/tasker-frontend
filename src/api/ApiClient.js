@@ -1,30 +1,54 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/',
-  headers: {
-    'Content-Type': 'application/json',
-    // You can add other headers here if needed
-  },
-}); 
+  baseURL: 'http://localhost:5000/api',
+  withCredentials: true, // This is important for sending cookies with requests
+});
 
+// Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+    // The browser will automatically send the HTTPOnly cookie
     return config;
   },
-  (error) => {
-    return Promise.reject(error)
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // If the error is due to an expired access token (status 401)
+    // and we haven't already tried to refresh the token
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // Attempt to refresh the token
+        const response = await apiClient.post('/user/refresh-token', {headers: {'content-type':'application/json'}});
+        
+        // If the token refresh was successful, retry the original request
+        if (response.data.success) {
+          return apiClient(originalRequest);
+        }
+      } catch (refreshError) {
+        // If refreshing the token fails, redirect to login
+        // You might want to dispatch an action to clear the user's session in your state management
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
   }
-)
+);
 
 
 export const get = (url) => apiClient.get(url);
 export const post = (url, data) => apiClient.post(url, data);
 export const put = (url, data) => apiClient.put(url, data);
-export const del = (url) => apiClient.delete(url);
+export const remove = (url) => apiClient.delete(url);
 
 export default apiClient;

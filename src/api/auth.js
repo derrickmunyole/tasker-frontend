@@ -1,4 +1,4 @@
-import { post } from "./ApiClient";
+import { post, get } from "./ApiClient";
 
 const registerUser = async (username, email, password) => {
   try {
@@ -21,7 +21,7 @@ const loginUser = async (email, password) => {
       
       if (response.data.success) {
          
-          localStorage.setItem('sessionId', response.data.session_id);
+          localStorage.setItem('session_id', response.data.session_id);
           
           return response;
       } else {
@@ -33,4 +33,22 @@ const loginUser = async (email, password) => {
   }
 }
 
-export { registerUser, loginUser };
+const getUserInfo = async () => {
+  try {
+    const response = await get('/user/info', {
+      withCredentials: true
+    });
+
+    
+    if (response?.status == 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch user info');
+    }
+  } catch (error) {
+    console.error('There was an error fetching user info', error);
+    throw error;
+  }
+};
+
+export { registerUser, loginUser, getUserInfo };

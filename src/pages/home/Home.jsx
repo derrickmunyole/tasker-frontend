@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './Home.css'
 import { ReactSVG } from 'react-svg'
+import { useAuth } from '../../contexts/AuthContext'
+import { useUser } from '../../contexts/UserContext'
 
 
 function Home() {
+    const { user: authUser } = useAuth() // Get the current user from your auth context
+    const { user, loading } = useUser() // Get user info from UserContext
+
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+
     const beforeInjection = (svg) => {
         svg.classList.add('more-vert');
         svg.setAttribute('style', 'color: #fff');
@@ -13,7 +24,7 @@ function Home() {
             <div className="overview">
                 <div className="at-a-glance">
                     <div className="top">
-                        <p>Good evening, Adam</p>
+                        <p>Good evening, {user ? user.first_name : 'User'}</p>
                         <ReactSVG src="/src/assets/icons/more_vert.svg" />
                     </div>
                     <p className='h1'>At a glance</p>

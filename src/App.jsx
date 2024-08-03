@@ -6,12 +6,13 @@ import LoginPage from './pages/login/Login'
 import MainPage from './layouts/main/MainPage'
 import Home from './pages/home/Home'
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { UserProvider, useUser } from './contexts/UserContext';
 
 function AppRoutes() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div style={{width:100,height:100, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>Loading...</div>;
+    return <div style={{ width: 100, height: 100, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Loading...</div>;
   }
 
   return (
@@ -32,9 +33,11 @@ function App() {
   return (
     <ChakraProvider>
       <AuthProvider>
-        <BrowserRouter basename="/">
-          <AppRoutes />
-        </BrowserRouter>
+        <UserProvider>
+          <BrowserRouter basename="/">
+            <AppRoutes />
+          </BrowserRouter>
+        </UserProvider>
       </AuthProvider>
     </ChakraProvider>
   );

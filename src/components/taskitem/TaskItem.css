@@ -1,0 +1,32 @@
+.task-item {
+    width: 100%;
+    height: auto;
+    padding: 16px 16px;
+    border: #ddd 1px solid;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+}
+
+.task-item.expanded {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.task-overview {
+    display: flex;
+    gap: 0.5rem;
+}
+
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.task-actions svg {
+    fill: #808080;
+    cursor: pointer;
+  }
+  

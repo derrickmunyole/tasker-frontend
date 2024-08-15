@@ -13,7 +13,7 @@ function Sidebar() {
       <nav className='sidebar'>
         <div className="top-section">
           <ul>
-            <li><SidebarLink to="/">Home</SidebarLink></li>
+            <li><SidebarLink to="/home">Home</SidebarLink></li>
             <li><SidebarLink to="/inbox">Inbox</SidebarLink></li>
             <li><SidebarLink to="/today">Today</SidebarLink></li>
             <li><SidebarLink to="/assigned">Assigned to me</SidebarLink></li>

@@ -5,14 +5,30 @@ import { ReactSVG } from 'react-svg'
 const CalendarWidget = ({ projects }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
 
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-  const handleDateClick = (day) => {
+
+  const positionPopup = (dateElement) => {
+    const rect = dateElement.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+  
+    setPopupPosition({
+      top: rect.bottom + scrollTop,
+      left: rect.left + scrollLeft,
+    });
+  };
+  
+  
+
+  const handleDateClick = (day, event) => {
     setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    positionPopup(event.currentTarget);
   };
 
   const getTasksForDate = (date) => {
@@ -26,6 +42,19 @@ const CalendarWidget = ({ projects }) => {
     );
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (selectedDate && !event.target.closest('.task-popup') && !event.target.closest('.calendar-day')) {
+        setSelectedDate(null);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedDate]);
+
   const beforeInjection = (svg) => {
     svg.classList.add('close');
     svg.setAttribute('style', 'color: #000');
@@ -33,7 +62,7 @@ const CalendarWidget = ({ projects }) => {
 
   return (
     <div className="calendar-widget">
-      <h2>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+      <h4>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h4>
       <div className="calendar-grid">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} className="calendar-day-header">{day}</div>
@@ -45,7 +74,7 @@ const CalendarWidget = ({ projects }) => {
           <div
             key={day}
             className={`calendar-day ${day === currentDate.getDate() ? 'current' : ''}`}
-            onClick={() => handleDateClick(day)}
+            onClick={(event) => handleDateClick(day, event)}
           >
             {day}
             {getTasksForDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day)).length > 0 && (
@@ -55,9 +84,9 @@ const CalendarWidget = ({ projects }) => {
         ))}
       </div>
       {selectedDate && (
-        <div className="task-popup">
+        <div className="task-popup" style={{ top: `${popupPosition.top}px`, left: `${popupPosition.left}px` }}>
           <div className='task-popup-header'>
-            <h3>{selectedDate.toDateString()}</h3>
+            <h5>{selectedDate.toDateString()}</h5>
             <ReactSVG src="/src/assets/icons/close.svg" beforeInjection={beforeInjection}/>
           </div>
           {getTasksForDate(selectedDate).length > 0 ? (

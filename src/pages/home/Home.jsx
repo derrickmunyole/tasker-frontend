@@ -29,7 +29,6 @@ function Home() {
         svg.setAttribute('style', 'color: #fff');
     }
     return (
-        <ProjectProvider>
             <div className='home-container'>
                 <div className="overview">
                     <div className="at-a-glance">
@@ -82,14 +81,13 @@ function Home() {
                             <CalendarWidget projects={projects} />
                         </div>
                     </div>
-                    <Divider orientation="vertical" color="#eee" thickness={2} />
+                    <Divider orientation="vertical" color="#FFF6F6" thickness={2} />
                     <div className="tasks-container">
                         <UpcomingTasks projects={projects} />
                     </div>
 
                 </div>
             </div>
-        </ProjectProvider>
     )
 }
 

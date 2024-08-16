@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TaskActionModal.css';
 
+
 function TaskActionModal({ isOpen, onClose, children }) {
   const [isAnimating, setIsAnimating] = useState(false);
   const modalRef = useRef(null);
@@ -31,6 +32,7 @@ function TaskActionModal({ isOpen, onClose, children }) {
   }, [isOpen, onClose]);
 
   if (!isOpen && !isAnimating) return null;
+
 
   return (
     <div className={`modal-overlay ${isOpen ? 'open' : 'closing'}`}>

@@ -1,7 +1,6 @@
 .inbox-container {
-    padding: 4rem;
     width: 80vw;
-    min-width: 100vh;
+    padding: 4rem 8rem;
 }
 
 .add-task-container input {

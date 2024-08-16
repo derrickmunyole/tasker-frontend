@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
 import './Inbox.css';
 import TaskItem from '../../components/taskitem/TaskItem';
 import { useTasks } from '../../contexts/TaskContext';
@@ -6,6 +8,7 @@ import LoadingIndicator from '../../components/loadingcomponent/LoadingWidget';
 import TaskActionModal from '../../components/taskactionmodal/TaskActionModal';
 import { ProjectProvider, useProjects } from '../../contexts/ProjectContext'
 import AddToProjectContent from '../../components/addtoprojectcontent/AddToProjectContent';
+import AssignTaskContent from '../../components/assigntaskcontent/AssignTaskContent';
 
 
 function Inbox() {
@@ -16,6 +19,9 @@ function Inbox() {
   const [activeModal, setActiveModal] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const { fetchProjects } = useProjects();
+  const [datePickerPosition, setDatePickerPosition] = useState({ top: 0, left: 0 });
+  const [datePickerType, setDatePickerType] = useState(null);
+
 
   const loadTasks = useCallback(async () => {
     try {
@@ -37,11 +43,44 @@ function Inbox() {
     setSelectedTask(task);
   }, []);
 
+  const handleDatePickerOpen = useCallback((event, type, taskId) => {
+    const rect = event.target.getBoundingClientRect();
+    setDatePickerPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+    });
+    setDatePickerType(type);
+    setSelectedTask(tasks.find(task => task.id === taskId));
+  }, [tasks])
+
+  const handleDateChange = (date) => {
+    if (datePickerType === 'dueDate') {
+      handleSetDueDate(date);
+    } else if (datePickerType === 'reminder') {
+      handleSetReminder(date);
+    }
+    setDatePickerType(null);
+  };
+
+  const handleSetDueDate = (date) => {
+    console.log(`Setting due date for task ${selectedTask.id} to ${date}`);
+    // Update the task's due date in your state or send to backend
+  };
+
+  const handleSetReminder = (date) => {
+    console.log(`Setting reminder for task ${selectedTask.id} to ${date}`);
+    // Update the task's reminder in your state or send to backend
+  };
 
   const closeModal = useCallback(() => {
     setActiveModal(null);
     setSelectedTask(null);
   }, []);
+
+  const handleAssign = useCallback((user) => {
+    console.log(`Assigning task ${selectedTask.id} to user:`, user);
+    closeModal();
+  }, [selectedTask, closeModal]);
 
   const renderModalContent = useMemo(() => {
     switch (activeModal) {
@@ -49,7 +88,7 @@ function Inbox() {
         fetchProjects();
         return <AddToProjectContent task={selectedTask} onClose={closeModal} />;
       case 'assign':
-        return <h2>Assign Task</h2>;
+        return <AssignTaskContent task={selectedTask} onClose={closeModal} onAssign={handleAssign} />;
       case 'setDeadline':
         return <h2>Set Deadline</h2>;
       case 'setRecurring':
@@ -64,10 +103,15 @@ function Inbox() {
   const taskList = useMemo(() => (
     <div className='task-list'>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onActionClick={handleActionClick} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          onActionClick={handleActionClick}
+          onDatePickerOpen={handleDatePickerOpen}
+        />
       ))}
     </div>
-  ), [tasks, handleActionClick]);
+  ), [tasks, handleActionClick, handleDatePickerOpen]);
 
   if (isLoading) {
     return (
@@ -106,6 +150,21 @@ function Inbox() {
         {/* Add your form or content for the specific action */}
         {/* You can use the selectedTask state to access the task data */}
       </TaskActionModal>
+      {datePickerType && (
+        <div style={{
+          position: 'absolute',
+          top: `${datePickerPosition.top}px`,
+          left: `${datePickerPosition.left}px`,
+          zIndex: 1000,
+        }}>
+          <DatePicker
+            selected={selectedTask[datePickerType === 'dueDate' ? 'dueDate' : 'reminder']}
+            onChange={handleDateChange}
+            onClickOutside={() => setDatePickerType(null)}
+            inline
+          />
+        </div>
+      )}
     </div>
   );
 }

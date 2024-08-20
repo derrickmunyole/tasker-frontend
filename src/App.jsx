@@ -1,12 +1,16 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationPage from './pages/registration/Registration'
 import LoginPage from './pages/login/Login'
 import MainPage from './layouts/main/MainPage'
 import Home from './pages/home/Home'
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { UserProvider, useUser } from './contexts/UserContext';
+import { UserProvider } from './contexts/UserContext';
+import Inbox from './pages/inbox/Inbox';
+import { TasksProvider } from './contexts/TaskContext';
+import { ProjectProvider } from './contexts/ProjectContext';
 
 function AppRoutes() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -21,6 +25,7 @@ function AppRoutes() {
         isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />
       }>
         <Route path="/home" element={<Home />} />
+        <Route path='/inbox' element={<Inbox />} />
         {/* Add other authenticated routes here */}
       </Route>
       <Route path="/login" element={<LoginPage />} />
@@ -29,17 +34,40 @@ function AppRoutes() {
   );
 }
 
-function App() {
-  return (
-    <ChakraProvider>
+const theme = createTheme({
+  palette: {
+    mode: 'light', // or 'dark'
+    primary: {
+      main: '#1976d2',
+    },
+    // ... other palette options
+  },
+  // ... other theme options
+});
+
+const CompositeProvider = ({ children }) => (
+  <ChakraProvider>
+    <ThemeProvider theme={theme}>
       <AuthProvider>
         <UserProvider>
-          <BrowserRouter basename="/">
-            <AppRoutes />
-          </BrowserRouter>
+          <TasksProvider>
+            <ProjectProvider>
+              {children}
+            </ProjectProvider>
+          </TasksProvider>
         </UserProvider>
       </AuthProvider>
-    </ChakraProvider>
+    </ThemeProvider>
+  </ChakraProvider>
+);
+
+function App() {
+  return (
+    <CompositeProvider>
+      <BrowserRouter basename="/">
+        <AppRoutes />
+      </BrowserRouter>
+    </CompositeProvider>
   );
 }
 

@@ -1,89 +1,110 @@
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-  
-  @keyframes slideIn {
-    from { 
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    to { 
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes slideOut {
-    from { 
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to { 
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    z-index: 1000;
-  }
-  
-  .modal-overlay.open {
-    animation: fadeIn 0.3s ease-out forwards;
-  }
-  
-  .modal-overlay.closing {
-    animation: fadeOut 0.3s ease-out forwards;
-  }
-  
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: auto;
+  min-width: 300px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+@media (min-width: 1200px) {
   .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 500px;
-    margin-top: 20px;
-    position: relative;
+    max-width: 50%;
   }
-  
-  .modal-content.open {
-    animation: slideIn 0.3s ease-out forwards;
+}
+
+/* For the recurring task form, we can make it even more specific */
+.recurring-task-content {
+  width: 500px;
+  max-width: 90vw;
+}
+
+@media (min-width: 1200px) {
+  .recurring-task-content {
+    width: 400px;
+    max-width: 30vw;
   }
-  
-  .modal-content.closing {
-    animation: slideOut 0.3s ease-out forwards;
+}
+
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  padding: 5px;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-50px);
   }
-  
-  .modal-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
-    padding: 5px;
-    line-height: 1;
+  to { 
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .modal-close:hover {
-    color: #000;
+}
+
+@keyframes slideOut {
+  from { 
+    opacity: 1;
+    transform: translateY(0);
   }
-  
+  to { 
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+.modal-overlay.open {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.modal-overlay.closing {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+.modal-content.open {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.modal-content.closing {
+  animation: slideOut 0.3s ease-out forwards;
+}

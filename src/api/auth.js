@@ -1,4 +1,4 @@
-import { post, get } from "./ApiClient";
+import { post, get } from "./apiClient";
 
 const registerUser = async (username, email, password) => {
   try {

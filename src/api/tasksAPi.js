@@ -1,4 +1,4 @@
-import { get, post, put, remove } from './ApiClient';
+import { get, post, put, remove } from './apiClient';
 
 const TASKS_ENDPOINT = '/tasks/';
 

@@ -91,12 +91,4 @@ function Home() {
     )
 }
 
-function HomeWithProvider() {
-    return (
-        <ProjectProvider>
-            <Home />
-        </ProjectProvider>
-    )
-}
-
-export default HomeWithProvider;
+export default Home;

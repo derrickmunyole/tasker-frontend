@@ -2,6 +2,8 @@ import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import RegistrationPage from './pages/registration/Registration'
 import LoginPage from './pages/login/Login'
 import MainPage from './layouts/main/MainPage'
@@ -9,6 +11,7 @@ import Home from './pages/home/Home'
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { UserProvider } from './contexts/UserContext';
 import Inbox from './pages/inbox/Inbox';
+import ManageProject from './pages/manageproject/ManageProject';
 import { TasksProvider } from './contexts/TaskContext';
 import { ProjectProvider } from './contexts/ProjectContext';
 
@@ -26,6 +29,7 @@ function AppRoutes() {
       }>
         <Route path="/home" element={<Home />} />
         <Route path='/inbox' element={<Inbox />} />
+        <Route path='/manage-projects' element={<ManageProject />} />
         {/* Add other authenticated routes here */}
       </Route>
       <Route path="/login" element={<LoginPage />} />
@@ -36,27 +40,27 @@ function AppRoutes() {
 
 const theme = createTheme({
   palette: {
-    mode: 'light', // or 'dark'
+    mode: 'light',
     primary: {
       main: '#1976d2',
     },
-    // ... other palette options
   },
-  // ... other theme options
 });
 
 const CompositeProvider = ({ children }) => (
   <ChakraProvider>
     <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <UserProvider>
-          <TasksProvider>
-            <ProjectProvider>
-              {children}
-            </ProjectProvider>
-          </TasksProvider>
-        </UserProvider>
-      </AuthProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AuthProvider>
+          <UserProvider>
+            <TasksProvider>
+              <ProjectProvider>
+                {children}
+              </ProjectProvider>
+            </TasksProvider>
+          </UserProvider>
+        </AuthProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   </ChakraProvider>
 );

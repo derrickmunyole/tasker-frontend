@@ -10,6 +10,9 @@ export const useTasks = () => {
   const [newTask, setNewTask] = useState('');
   const [activeModal, setActiveModal] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [datePickerPosition, setDatePickerPosition] = useState({ top: 0, left: 0 });
   const [datePickerType, setDatePickerType] = useState(null);
 
@@ -62,15 +65,19 @@ export const useTasks = () => {
     setDatePickerType(null);
   }, [datePickerType, handleSetDueDate, handleSetReminder]);
 
-  const handleDatePickerOpen = useCallback((event, type, taskId) => {
-    const rect = event.target.getBoundingClientRect();
-    setDatePickerPosition({
-      top: rect.bottom + window.scrollY,
-      left: rect.left + window.scrollX,
-    });
+  const handleDatePickerOpen = (event, type, taskId) => {
+    event.stopPropagation(); // Prevent event bubbling
     setDatePickerType(type);
-    setSelectedTask(tasks.find(task => task.id === taskId));
-  }, [tasks]);
+    setSelectedTaskId(taskId);
+    setIsDatePickerOpen(true);
+};
+
+
+  const handleDatePickerClose = useCallback(() => {
+    setIsDatePickerOpen(false);
+    setDatePickerType(null);
+    setSelectedTask(null);
+  }, []);
 
   const handleAddTask = useCallback(() => {
     // Implement add task logic here
@@ -96,6 +103,8 @@ export const useTasks = () => {
     handleSetReminder,
     handleDateChange,
     handleDatePickerOpen,
+    handleDatePickerClose,
+    isDatePickerOpen,
     handleAddTask,
     fetchProjects
   };

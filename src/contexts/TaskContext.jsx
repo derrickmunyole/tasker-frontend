@@ -123,4 +123,10 @@ export const TasksProvider = ({ children }) => {
   );
 };
 
-export const useTasks = () => useContext(TasksContext);
+export const useTasksContext = () => {
+  const context = useContext(TasksContext);
+  if (!context) {
+    throw new Error('useTasksContext must be used within a TaskContextProvider');
+  }
+  return context;
+};

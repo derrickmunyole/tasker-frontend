@@ -5,6 +5,7 @@ const ProjectContext = createContext();
 
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
+  const [currentProject, setCurrentProject] = useState(null);
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -25,10 +26,30 @@ export const ProjectProvider = ({ children }) => {
     }
   }, []);
 
+  const fetchProjectById = useCallback(async (projectId) => {
+    try {
+      const response = await projectsApi.getProject(projectId);
+      console.log('Fetched project:', response.data);
+      setCurrentProject(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching project:', error);
+      setCurrentProject(null);
+    }
+  }, []);
+
   // Add other methods like updateProject, deleteProject, etc.
 
   return (
-    <ProjectContext.Provider value={{ projects, fetchProjects, createProject }}>
+    <ProjectContext.Provider 
+      value={{ 
+        projects, 
+        currentProject, 
+        fetchProjects, 
+        createProject, 
+        fetchProjectById 
+      }}
+    >
       {children}
     </ProjectContext.Provider>
   );

@@ -6,6 +6,7 @@ import Inbox from './pages/inbox/Inbox';
 import ManageProject from './pages/manageproject/ManageProject';
 import LoginPage from './pages/login/Login';
 import RegistrationPage from './pages/registration/Registration';
+import Project from './pages/projectdetails/Project';
 
 const AppRoutes = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/inbox" element={<Inbox />} />
         <Route path="/manage-projects" element={<ManageProject />} />
+        <Route path="/project/:projectId" element={<Project />} />
         {/* Add other authenticated routes here */}
       </Route>
       <Route path="/login" element={<LoginPage />} />

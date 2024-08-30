@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
   CircularProgress,
-  Container,
+  Paper,
   List,
   IconButton,
 } from '@mui/material';
@@ -20,6 +20,13 @@ import TaskActionModal from '../../components/taskactionmodal/TaskActionModal';
 import { useTasks } from '../../hooks/useTasks';
 import { useRecurringTasks } from '../../hooks/useRecurringTasks';
 import InboxFilters from './InboxFilters';
+import { styled } from '@mui/system';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  height: '100%',
+}));
+
 
 function Inbox() {
   const {
@@ -109,30 +116,33 @@ function Inbox() {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Container>
-      <Typography variant="h3" gutterBottom>Inbox</Typography>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Add a new task..."
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
-        InputProps={{
-          endAdornment: (
-            <IconButton onClick={handleAddTask}>
-              <AddIcon />
-            </IconButton>
-          ),
-        }}
-        sx={{ marginBottom: 2 }}
-      />
-      <InboxFilters filters={filters} toggleFilter={toggleFilter} />
-
-      {taskList}
+    <Box sx={{ flexGrow: 1 }}>
+      <Typography variant="h4" gutterBottom>Inbox</Typography>
+      <StyledPaper>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Add a new task..."
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={handleAddTask}>
+                <AddIcon />
+              </IconButton>
+            ),
+          }}
+          sx={{ marginBottom: 2 }}
+        />
+        <InboxFilters filters={filters} toggleFilter={toggleFilter} />
+        {taskList}
+      </StyledPaper>
+      
       <TaskActionModal isOpen={!!activeModal} onClose={closeModal}>
         {renderModalContent}
       </TaskActionModal>
+      
       <Modal
         open={isDatePickerOpen}
         onClose={handleDatePickerClose}
@@ -154,7 +164,7 @@ function Inbox() {
           />
         </Box>
       </Modal>
-    </Container>
+    </Box>
   );
 }
 

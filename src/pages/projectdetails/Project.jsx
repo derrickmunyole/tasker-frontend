@@ -21,6 +21,7 @@ import {
   Collapse,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import CommentSection from '../../components/project/commentsection/CommentSection';
 
 const Project = () => {
   const { projectId } = useParams();
@@ -60,6 +61,25 @@ const Project = () => {
     { date: '2024-08-24', description: 'Completed milestone: Planning' },
     { date: '2024-08-23', description: 'Added new team member: Jane Smith' },
   ];
+
+  const [comments, setComments] = useState([
+    {
+      author: 'John Doe',
+      avatar: 'https://avatar.iran.liara.run/public/16',
+      projectName: 'Project Alpha',
+      taskName: 'Design UI mockups',
+      text: "Great progress on the UI mockups! Let's review them in our next meeting.",
+      date: '2024-08-26T10:30:00'
+    },
+    {
+      author: 'Jane Smith',
+      avatar: 'https://avatar.iran.liara.run/public/97',
+      projectName: 'Project Alpha',
+      taskName: 'Implement user authentication',
+      text: "I've started working on the user authentication. We might need to discuss the security requirements.",
+      date: '2024-08-25T14:45:00'
+    }
+  ]);
 
   useEffect(() => {
     fetchProjectById(projectId);
@@ -193,8 +213,16 @@ const Project = () => {
               ))}
             </List>
           </Paper>
+          <Paper sx={{ padding: 2, marginBottom: 3 }}>
+            <Typography variant="h2" onClick={() => toggleSection('comments')} sx={{ cursor: 'pointer' }}>
+              Comments
+            </Typography>
+            <Collapse in={expandedSection === 'comments'}>
+              <CommentSection comments={comments} />
+            </Collapse>
+          </Paper>
         </Grid>
-      </Grid>
+        </Grid>
     </Box>
   );
 };

@@ -11,14 +11,15 @@ import {
   IconButton,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
+import { Select, MenuItem } from '@mui/material';
 import TaskItem from '../../components/taskitem/TaskItem';
-import LoadingIndicator from '../../components/loadingcomponent/LoadingWidget';
 import RecurringTaskForm from '../../components/recurringtaskform/RecurringTaskForm';
 import AddToProjectContent from '../../components/addtoprojectcontent/AddToProjectContent';
 import AssignTaskContent from '../../components/assigntaskcontent/AssignTaskContent';
 import TaskActionModal from '../../components/taskactionmodal/TaskActionModal';
 import { useTasks } from '../../hooks/useTasks';
 import { useRecurringTasks } from '../../hooks/useRecurringTasks';
+import InboxFilters from './InboxFilters';
 
 function Inbox() {
   const {
@@ -46,6 +47,17 @@ function Inbox() {
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [filters, setFilters] = useState(['all']);
+
+  const toggleFilter = (filter) => {
+    setFilters(prevFilters => {
+      if (prevFilters.includes(filter)) {
+        return prevFilters.filter(f => f !== filter);
+      } else {
+        return [...prevFilters, filter];
+      }
+    });
+  };
 
   const taskList = useMemo(() => (
     <List>
@@ -115,6 +127,8 @@ function Inbox() {
         }}
         sx={{ marginBottom: 2 }}
       />
+      <InboxFilters filters={filters} toggleFilter={toggleFilter} />
+
       {taskList}
       <TaskActionModal isOpen={!!activeModal} onClose={closeModal}>
         {renderModalContent}

@@ -1,28 +1,52 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom'
-import ContainerView from '../../components/containerview/ContanerView';
+import React from 'react';
+import { Box, styled } from '@mui/material';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
-import './MainPage.css';
+import { Outlet } from 'react-router-dom';
 
-/**
- * Renders the main page of the application.
- *
- * @return {JSX.Element} The JSX element representing the main page.
- */
-function MainPage() {
-  const [currentComponent, setCurrentComponent] = useState(); // set default component
+const LayoutContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100vh',
+});
+
+const NavbarWrapper = styled(Box)({
+  flexShrink: 0, // Prevent navbar from shrinking
+});
+
+const ContentWrapper = styled(Box)({
+  display: 'flex',
+  flex: 1,
+  overflow: 'hidden', // Prevent content from overflowing
+});
+
+const SidebarWrapper = styled(Box)({
+  flexShrink: 0, // Prevent sidebar from shrinking
+});
+
+const MainContent = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  paddingTop: theme.spacing(10), // Add extra padding to the top
+  overflowY: 'auto', // Allow scrolling in the main content area
+}));
+
+function Layout() {
   return (
-    <>
-    <Navbar />
-    <div className='main-container'>
-      <Sidebar className='sidebar'/>
-      <main>
-        <Outlet />
-      </main>
-    </div>
-    </>
+    <LayoutContainer>
+      <NavbarWrapper>
+        <Navbar />
+      </NavbarWrapper>
+      <ContentWrapper>
+        <SidebarWrapper>
+          <Sidebar />
+        </SidebarWrapper>
+        <MainContent>
+          <Outlet />
+        </MainContent>
+      </ContentWrapper>
+    </LayoutContainer>
   );
 }
 
-export default MainPage;
+export default Layout;

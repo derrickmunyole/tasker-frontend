@@ -1,7 +1,228 @@
+* {
+  margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
 .project-details-container {
+    margin: 0 auto;
+    padding: 4rem;
+  }
+  
+  .project-header {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .project-status {
+    padding: 5px 8px;
+    background-color: #4caf50;
+    font-size: smaller;
+    border-radius: 5px;
+    margin-top: -8px;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .project-content {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .project-main {
+    flex: 3;
+  }
+  
+  .project-sidebar {
+    flex: 1;
+  }
+  
+  .project-description,
+  .milestone-section,
+  .project-meta,
+  .team-members-section {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .meta-element {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .meta-icon {
+    margin-right: 10px;
+  }
+  
+  .team-members-list {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    width: 80vw;
-    padding: 4rem;
-}
+    gap: 15px;
+  }
+  
+  .team-member {
+    display: flex;
+    align-items: center;
+  }
+  
+  .member-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .expandable-section h2 {
+    cursor: pointer;
+  }
+  
+  .expandable-section h2:hover {
+    color: #4caf50;
+  }
+  
+  .progress-bar-container {
+    width: 30%;
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .progress-bar {
+    height: 10px;
+    background-color: #4caf50;
+    border-radius: 5px;
+  }
+
+  .tasks-section {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .section-icon {
+    margin-right: 10px;
+  }
+  
+  .tasks-list {
+    margin-top: 20px;
+  }
+  
+  .task-item {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .task-title {
+    font-weight: bold;
+    margin-right: 10px
+  }
+  
+  .task-meta {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .task-status {
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    margin-right: 10px;
+    white-space: nowrap;
+  }
+  
+  .task-status.to-do {
+    background-color: #ffd700;
+    width: max-content;
+    color: #000;
+  }
+  
+  .task-status.in-progress {
+    background-color: #1e90ff;
+    color: #fff;
+  }
+  
+  .task-status.completed {
+    background-color: #32cd32;
+    color: #fff;
+  }
+  
+  .task-assignee {
+    font-size: 0.9em;
+    color: #666;
+    white-space: nowrap;
+  }
+  
+  
+  .recent-activities {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .recent-activities ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .recent-activities li {
+    margin-bottom: 10px;
+  }
+  
+  .activity-date {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .team-member:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+  }
+  
+  @media (max-width: 1024px) {
+    .project-content {
+      flex-direction: column;
+    }
+    
+    .project-sidebar {
+      order: -1;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .project-details-container {
+      padding: 2rem;
+    }
+    
+    .project-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
+  
+  @media (max-width: 768px) {
+    .project-content {
+      flex-direction: column;
+    }
+    
+    .project-sidebar {
+      order: -1;
+    }
+  }
+  

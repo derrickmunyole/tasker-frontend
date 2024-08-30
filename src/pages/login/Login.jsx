@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Input, Button, VStack, HStack, Text } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom'
+import { TextField, Button, Stack, Typography, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import {loginUser} from '../../api/auth'
+import { loginUser } from '../../api/auth';
 import { useAuth } from '../../contexts/AuthContext';
-
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +11,7 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const { setIsAuthenticated } = useAuth();
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const validate = () => {
         const errors = {};
@@ -28,14 +27,14 @@ const Login = () => {
     };
 
     const handleSubmit = async (e) => {
-        console.log('submitting...')
+        console.log('submitting...');
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length === 0) {
             try {
                 const response = await loginUser(email, password);
 
-                console.log(response)
+                console.log(response);
 
                 if (response.data.success) {
                     setIsAuthenticated(true);
@@ -54,32 +53,30 @@ const Login = () => {
     return (
         <div className='container'>
             <form onSubmit={handleSubmit}>
-                <VStack spacing={4}>
-                    <HStack>
-                        <Text fontSize="xl">Welcome!</Text>
-                    </HStack>
-                    <Input
+                <Stack spacing={2}>
+                    <Typography variant="h5">Welcome!</Typography>
+                    <TextField
                         type="email"
-                        placeholder="Email"
+                        label="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        isInvalid={!!errors.email}
+                        error={!!errors.email}
+                        helperText={errors.email}
                     />
-                    {errors.email && <Text color="red.500">{errors.email}</Text>}
-                    <Input
+                    <TextField
                         type="password"
-                        placeholder="Password"
+                        label="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        isInvalid={!!errors.password}
+                        error={!!errors.password}
+                        helperText={errors.password}
                     />
-                    {errors.password && <Text color="red.500">{errors.password}</Text>}
-                    <Button type="submit" mt={4} colorScheme='blue'>Login</Button>
-                    <HStack justifyContent="center">
-                        <Text>Don't have an account?</Text>
-                        <Text as="a" href="/register">Create one</Text>
-                    </HStack>
-                </VStack>
+                    <Button type="submit" variant="contained" color="primary">Login</Button>
+                    <Stack direction="row" justifyContent="center" spacing={1}>
+                        <Typography>Don't have an account?</Typography>
+                        <Link href="/register">Create one</Link>
+                    </Stack>
+                </Stack>
             </form>
         </div>
     );

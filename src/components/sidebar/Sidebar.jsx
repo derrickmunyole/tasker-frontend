@@ -1,38 +1,107 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDisclosure, Button } from '@chakra-ui/react';
-import './Sidebar.css';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  Box,
+  styled
+} from '@mui/material';
+import {
+  Home as HomeIcon,
+  Inbox as InboxIcon,
+  Today as TodayIcon,
+  AssignmentInd as AssignedIcon,
+  Folder as ProjectIcon,
+  AddCircleOutline as CreateIcon,
+  Settings as ManageIcon,
+  Height
+} from '@mui/icons-material';
 import CreateProjectModal from '../createprojectmodal/CreateProjectModal';
-import SidebarLink from '../sidebarlink/SideBarLink';
+import { position } from '@chakra-ui/react';
+
+const SidebarContainer = styled(Drawer)(({ theme }) => ({
+  width: 240,
+  flexShrink: 0,
+  '& .MuiDrawer-paper': {
+    width: 240,
+    boxSizing: 'border-box',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    position: 'relative',
+    height: 'calc(100vh - 64px)', // Subtract navbar height
+    marginTop: '64px', // Add top margin to account for navbar
+    overflowY: 'auto', // Allow sidebar to scroll if content is too long
+    flexShrink: 0,
+
+  },
+}));
+
+const SidebarLink = styled(RouterLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: 'inherit',
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(1, 2),
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
 
 function Sidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
+
+  const linkItems = [
+    { text: 'Home', icon: <HomeIcon />, to: '/home' },
+    { text: 'Inbox', icon: <InboxIcon />, to: '/inbox' },
+    { text: 'Today', icon: <TodayIcon />, to: '/today' },
+    { text: 'Assigned to me', icon: <AssignedIcon />, to: '/assigned' },
+    { text: 'Project', icon: <ProjectIcon />, to: '/project' },
+    { text: 'Create Project', icon: <CreateIcon />, onClick: onOpen },
+    { text: 'Manage Projects', icon: <ManageIcon />, to: '/manage-projects' },
+  ];
+
   return (
     <>
-      <nav className='sidebar'>
-        <div className="top-section">
-          <ul>
-            <li><SidebarLink to="/home">Home</SidebarLink></li>
-            <li><SidebarLink to="/inbox">Inbox</SidebarLink></li>
-            <li><SidebarLink to="/today">Today</SidebarLink></li>
-            <li><SidebarLink to="/assigned">Assigned to me</SidebarLink></li>
-          </ul>
-        </div>
-        <div className="divider"></div>
-        <div className="bottom-section">
-          <ul>
-            <li><SidebarLink to="/projects">Projects</SidebarLink></li>
-            <li>
-              <SidebarLink onClick={onOpen}>
-                Create Project
-              </SidebarLink>
-            </li>
-            <li><SidebarLink to="/manage-projects">Manage Projects</SidebarLink></li>
-          </ul>
-        </div>
-      </nav>
-      <CreateProjectModal isOpen={isOpen} onClose={onClose} />
+      <Box component="nav" sx={{ height: '100%' }}> {/* Wrap in a Box with full height */}
+        <SidebarContainer variant="permanent" anchor="left">
+          <Box sx={{ overflow: 'auto' }}>
+            <List>
+              {linkItems.slice(0, 4).map((item, index) => (
+                <ListItem key={item.text} disablePadding>
+                  <SidebarLink to={item.to} component={RouterLink}>
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </SidebarLink>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            <List>
+              {linkItems.slice(4).map((item, index) => (
+                <ListItem key={item.text} disablePadding>
+                  <SidebarLink
+                    to={item.to}
+                    component={item.onClick ? 'button' : RouterLink}
+                    onClick={item.onClick}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </SidebarLink>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </SidebarContainer>
+        <CreateProjectModal isOpen={isOpen} onClose={onClose} />
+      </Box>
     </>
   );
 }

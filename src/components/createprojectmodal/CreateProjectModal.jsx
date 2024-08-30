@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
-  Input,
-  Textarea,
-  VStack
-} from '@chakra-ui/react';
+  TextField,
+  Stack,
+  IconButton
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function CreateProjectModal({ isOpen, onClose }) {
   const [title, setTitle] = useState('');
@@ -24,34 +22,48 @@ function CreateProjectModal({ isOpen, onClose }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create New Project</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <VStack spacing={4}>
-            <Input 
-              placeholder="Title" 
-              value={title} 
-              onChange={(e) => setTitle(e.target.value)} 
-            />
-            <Textarea 
-              placeholder="Description" 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)} 
-            />
-          </VStack>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={handleCreateProject}>
-            Create Project
-          </Button>
-          <Button variant='ghost' onClick={onClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>
+        Create New Project
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <Stack spacing={2} sx={{ mt: 2 }}>
+          <TextField
+            label="Title"
+            variant="outlined"
+            fullWidth
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            label="Description"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button variant="contained" onClick={handleCreateProject}>
+          Create Project
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

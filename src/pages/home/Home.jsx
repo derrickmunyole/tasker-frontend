@@ -1,94 +1,115 @@
-import React, { useEffect, useState } from 'react'
-import './Home.css'
-import { ReactSVG } from 'react-svg'
-import { useAuth } from '../../contexts/AuthContext'
-import { useUser } from '../../contexts/UserContext'
-import ProjectCard from '../../components/projectcard/ProjectCard'
-import { ProjectProvider, useProjects } from '../../contexts/ProjectContext'
-import CalendarWidget from '../../components/calendarwidget/CalendarWidget'
-import UpcomingTasks from '../../components/upcomingtasks/UpcomingTasks'
-import Divider from '../../components/divider/Divider';
+import React, { useEffect } from 'react';
+import { Box, Typography, Grid, Paper, IconButton, Divider } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext';
+import ProjectCard from '../../components/projectcard/ProjectCard';
+import { useProjects } from '../../contexts/ProjectContext';
+import CalendarWidget from '../../components/calendarwidget/CalendarWidget';
+import UpcomingTasks from '../../components/upcomingtasks/UpcomingTasks';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  color: theme.palette.text.primary,
+  backgroundColor: theme.palette.background.paper,
+}));
 
 function Home() {
-    const { user: authUser } = useAuth()
-    const { user, loading } = useUser()
-    const { projects, fetchProjects } = useProjects();
+  const { user: authUser } = useAuth();
+  const { user, loading } = useUser();
+  const { projects, fetchProjects } = useProjects();
 
-    useEffect(() => {
-        fetchProjects();
-    }, [fetchProjects]);
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
+  if (loading) {
+    return <Box>Loading...</Box>;
+  }
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
+  return (
+    <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
+          <StyledPaper>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography variant="h5">
+                Good evening, {user ? user.first_name : 'User'}
+              </Typography>
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
+            <Typography variant="h4" gutterBottom>
+              At a glance
+            </Typography>
+            <Grid container spacing={2}>
+              {['Total Projects', 'Projects Completed', 'Tasks due today', 'Overdue tasks'].map(
+                (item, index) => (
+                  <Grid item xs={6} sm={3} key={index}>
+                    <StyledPaper>
+                      <Typography variant="body2">{item}</Typography>
+                    </StyledPaper>
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </StyledPaper>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <StyledPaper>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography variant="h6">Activity Feed</Typography>
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
+            <Box className="feed">
+              {/* Add feed content here */}
+            </Box>
+          </StyledPaper>
+        </Grid>
+      </Grid>
 
+      <Box mt={4}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box display="flex" alignItems="center">
+            <Typography variant="h5">Active projects</Typography>
+            <IconButton>
+              <KeyboardArrowDownIcon />
+            </IconButton>
+          </Box>
+          <Typography variant="body2" color="primary">
+            See more
+          </Typography>
+        </Box>
+        <Grid container spacing={2}>
+          {projects.map((project) => (
+            <Grid item xs={12} sm={6} md={4} key={project.id}>
+              <ProjectCard project={project} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-    const beforeInjection = (svg) => {
-        svg.classList.add('more-vert');
-        svg.setAttribute('style', 'color: #fff');
-    }
-    return (
-            <div className='home-container'>
-                <div className="overview">
-                    <div className="at-a-glance">
-                        <div className="top">
-                            <p>Good evening, {user ? user.first_name : 'User'}</p>
-                            <ReactSVG src="/src/assets/icons/more_vert.svg" />
-                        </div>
-                        <p className='h1'>At a glance</p>
-                        <div className="quick-stats">
-                            <div className="stat-item">
-                                <p>Total Projects</p>
-                            </div>
-                            <div className="stat-item">
-                                <p>Projects Completed</p>
-                            </div>
-                            <div className="stat-item">
-                                <p>Tasks due today</p>
-                            </div>
-                            <div className="stat-item">
-                                <p>Overdue tasks</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="activity-feed">
-                        <div className="activity-top">
-                            <p>Activity Feed</p>
-                            <ReactSVG src="/src/assets/icons/more_vert.svg" />
-                        </div>
-                        <div className="feed">
-
-                        </div>
-                    </div>
-                </div>
-                <div className='active-project-header-container'>
-                    <div className='active-project-header' >
-                        <h4>Active projects</h4>
-                        <ReactSVG src="/src/assets/icons/keyboard_arrow_down.svg" />
-                    </div>
-                    <p>See more</p>
-                </div>
-                <div id="active-project-cards-container">
-                    {projects.map(project => (
-                        <ProjectCard key={project.id} project={project} />
-                    ))}
-
-                </div>
-                <div id="calendarview-outer-container">
-                    <div className="calendar-wrapper">
-                        <div id="calendar-widget-container">
-                            <CalendarWidget projects={projects} />
-                        </div>
-                    </div>
-                    <Divider orientation="vertical" color="#FFF6F6" thickness={2} />
-                    <div className="tasks-container">
-                        <UpcomingTasks projects={projects} />
-                    </div>
-
-                </div>
-            </div>
-    )
+      <Box mt={4}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <StyledPaper>
+              <CalendarWidget projects={projects} />
+            </StyledPaper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <StyledPaper>
+              <UpcomingTasks projects={projects} />
+            </StyledPaper>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
 }
 
 export default Home;

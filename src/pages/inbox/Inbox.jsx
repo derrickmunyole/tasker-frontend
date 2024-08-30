@@ -1,8 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Modal, Box } from '@mui/material';
-import "react-datepicker/dist/react-datepicker.css"
-import './Inbox.css';
+import {
+  Box,
+  Modal,
+  TextField,
+  Typography,
+  CircularProgress,
+  Container,
+  List,
+  IconButton,
+} from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import TaskItem from '../../components/taskitem/TaskItem';
 import LoadingIndicator from '../../components/loadingcomponent/LoadingWidget';
 import RecurringTaskForm from '../../components/recurringtaskform/RecurringTaskForm';
@@ -11,7 +19,6 @@ import AssignTaskContent from '../../components/assigntaskcontent/AssignTaskCont
 import TaskActionModal from '../../components/taskactionmodal/TaskActionModal';
 import { useTasks } from '../../hooks/useTasks';
 import { useRecurringTasks } from '../../hooks/useRecurringTasks';
-
 
 function Inbox() {
   const {
@@ -41,7 +48,7 @@ function Inbox() {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   const taskList = useMemo(() => (
-    <div className='task-list'>
+    <List>
       {tasks.map((task) => (
         <TaskItem
           key={task.id}
@@ -50,10 +57,8 @@ function Inbox() {
           onDatePickerOpen={handleDatePickerOpen}
         />
       ))}
-    </div>
+    </List>
   ), [tasks, handleActionClick, handleDatePickerOpen]);
-
-  
 
   const renderModalContent = useMemo(() => {
     switch (activeModal) {
@@ -63,11 +68,11 @@ function Inbox() {
       case 'assign':
         return <AssignTaskContent task={selectedTask} onClose={closeModal} onAssign={handleAssign} />;
       case 'setDeadline':
-        return <h2>Set Deadline</h2>;
+        return <Typography variant="h6">Set Deadline</Typography>;
       case 'setRecurring':
         return <RecurringTaskForm onClose={closeModal} onSubmit={handleAddRecurringTask} />;
       case 'edit':
-        return <h2>Edit Task</h2>;
+        return <Typography variant="h6">Edit Task</Typography>;
       default:
         return null;
     }
@@ -75,8 +80,8 @@ function Inbox() {
 
   if (isLoading) {
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           width: 100,
           height: 100,
           position: 'absolute',
@@ -85,26 +90,31 @@ function Inbox() {
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <LoadingIndicator />
-      </div>
+        <CircularProgress />
+      </Box>
     );
   }
-  if (error) return <div>{error}</div>;
-
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <div className='inbox-container'>
-      <h3>Inbox</h3>
-      <div className='add-task-container'>
-        <input
-          type='text'
-          className='add-task-input'
-          placeholder='Add a new task...'
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
-        />
-      </div>
+    <Container>
+      <Typography variant="h3" gutterBottom>Inbox</Typography>
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Add a new task..."
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
+        InputProps={{
+          endAdornment: (
+            <IconButton onClick={handleAddTask}>
+              <AddIcon />
+            </IconButton>
+          ),
+        }}
+        sx={{ marginBottom: 2 }}
+      />
       {taskList}
       <TaskActionModal isOpen={!!activeModal} onClose={closeModal}>
         {renderModalContent}
@@ -124,13 +134,13 @@ function Inbox() {
           boxShadow: 24,
           p: 0,
         }}>
-            <DateCalendar
-              value={selectedDate}
-              onChange={handleDateChange}
-            />
+          <DateCalendar
+            value={selectedDate}
+            onChange={handleDateChange}
+          />
         </Box>
       </Modal>
-    </div>
+    </Container>
   );
 }
 

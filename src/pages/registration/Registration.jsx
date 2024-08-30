@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button, VStack, HStack, Text } from '@chakra-ui/react';
+import { TextField, Button, Stack, Typography, Link } from '@mui/material';
 import './Registration.css';
 
 const Registration = () => {
@@ -50,51 +50,49 @@ const Registration = () => {
 
     return (
         <div className='container'>
-        <VStack spacing={4}>
-            <HStack>
-                <Text fontSize="xl">Register an account</Text>
-            </HStack>
-            <Input
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Username"
-                isInvalid={!!errors.username}
-                errorContent={<Text color="red.500">{errors.username}</Text>}
-            />
-            <Input
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email"
-                isInvalid={!!errors.email}
-                errorContent={<Text color="red.500">{errors.email}</Text>}
-            />
-            <Input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                isInvalid={!!errors.password}
-                errorContent={<Text color="red.500">{errors.password}</Text>}
-            />
-            <Input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm Password"
-                isInvalid={!!errors.confirmPassword}
-                errorContent={<Text color="red.500">{errors.confirmPassword}</Text>}
-            />
-            <Button onClick={handleSubmit} mt={4} colorScheme='blue'>Register</Button>
-            <HStack justifyContent="center">
-                <Text>Already have an account?</Text>
-                <Text as="a" href="/login">Login</Text>
-            </HStack>
-        </VStack>
+            <Stack spacing={2}>
+                <Typography variant="h5">Register an account</Typography>
+                <TextField
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    label="Username"
+                    error={!!errors.username}
+                    helperText={errors.username}
+                />
+                <TextField
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    label="Email"
+                    error={!!errors.email}
+                    helperText={errors.email}
+                />
+                <TextField
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    label="Password"
+                    error={!!errors.password}
+                    helperText={errors.password}
+                />
+                <TextField
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    label="Confirm Password"
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword}
+                />
+                <Button onClick={handleSubmit} variant="contained" color="primary">Register</Button>
+                <Stack direction="row" justifyContent="center" spacing={1}>
+                    <Typography>Already have an account?</Typography>
+                    <Link href="/login">Login</Link>
+                </Stack>
+            </Stack>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './TaskActionModal.css';
-
+import { Box, Modal, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function TaskActionModal({ isOpen, onClose, children }) {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -33,14 +33,31 @@ function TaskActionModal({ isOpen, onClose, children }) {
 
   if (!isOpen && !isAnimating) return null;
 
-
   return (
-    <div className={`modal-overlay ${isOpen ? 'open' : 'closing'}`}>
-      <div className={`modal-content ${isOpen ? 'open' : 'closing'}`} ref={modalRef}>
-        <button className="modal-close" onClick={onClose}>×</button>
+    <Modal open={isOpen} onClose={onClose}>
+      <Box
+        ref={modalRef}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          width: '80%',
+          maxWidth: 600,
+        }}
+      >
+        <IconButton
+          sx={{ position: 'absolute', top: 8, right: 8 }}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
         {children}
-      </div>
-    </div>
+      </Box>
+    </Modal>
   );
 }
 

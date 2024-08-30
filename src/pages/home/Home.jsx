@@ -24,21 +24,21 @@ const GlanceItem = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.5), // Reduced padding
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.background.default,
     transition: 'all 0.3s ease',
     '&:hover': {
         backgroundColor: theme.palette.primary.light,
-        transform: 'translateY(-5px)',
-        boxShadow: theme.shadows[4],
+        transform: 'translateY(-3px)', // Reduced transform
+        boxShadow: theme.shadows[3], // Reduced shadow
     },
 }));
 
 const GlanceIcon = styled(Box)(({ theme }) => ({
-    fontSize: '2rem',
+    fontSize: '1.5rem', // Reduced font size
     color: theme.palette.primary.main,
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(0.5), // Reduced margin
 }));
 
 function Home() {
@@ -82,8 +82,8 @@ function Home() {
                                 <Grid item xs={6} sm={3} key={index}>
                                     <GlanceItem>
                                         <GlanceIcon>{item.icon}</GlanceIcon>
-                                        <Typography variant="h6" align="center">{item.value}</Typography>
-                                        <Typography variant="body2" align="center">{item.label}</Typography>
+                                        <Typography variant="h6" align="center" sx={{ fontSize: '1.1rem' }}>{item.value}</Typography>
+                                        <Typography variant="body2" align="center" sx={{ fontSize: '0.8rem' }}>{item.label}</Typography>
                                     </GlanceItem>
                                 </Grid>
                             ))}

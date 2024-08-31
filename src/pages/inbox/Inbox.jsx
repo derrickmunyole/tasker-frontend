@@ -11,7 +11,6 @@ import {
   IconButton,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { Select, MenuItem } from '@mui/material';
 import TaskItem from '../../components/taskitem/TaskItem';
 import RecurringTaskForm from '../../components/recurringtaskform/RecurringTaskForm';
 import AddToProjectContent from '../../components/addtoprojectcontent/AddToProjectContent';
@@ -117,7 +116,7 @@ function Inbox() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography variant="h4" gutterBottom>Inbox</Typography>
+      <Typography variant="h1" gutterBottom>Inbox</Typography>
       <StyledPaper>
         <TextField
           fullWidth

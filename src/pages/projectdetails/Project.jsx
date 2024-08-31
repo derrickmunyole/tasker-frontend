@@ -111,8 +111,8 @@ const Project = () => {
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2" onClick={() => toggleSection('description')} sx={{ cursor: 'pointer' }}>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0} >
+            <Typography variant="h4" onClick={() => toggleSection('description')} sx={{ cursor: 'pointer' }}>
               Description
             </Typography>
             <Collapse in={expandedSection === 'description'}>
@@ -120,13 +120,13 @@ const Project = () => {
             </Collapse>
           </Paper>
 
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2">Project Milestones</Typography>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0} >
+            <Typography variant="h4">Project Milestones</Typography>
             <MilestoneTracker milestones={milestones} />
           </Paper>
 
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2" onClick={() => toggleSection('tasks')} sx={{ cursor: 'pointer' }}>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0}>
+            <Typography variant="h4" onClick={() => toggleSection('tasks')} sx={{ cursor: 'pointer' }}>
               <FaTasks /> Tasks
             </Typography>
             <Collapse in={expandedSection === 'tasks'}>
@@ -152,21 +152,19 @@ const Project = () => {
             </Collapse>
           </Paper>
 
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2">Recent Activities</Typography>
-            <List>
-              {recentActivities.map((activity, index) => (
-                <ListItem key={index}>
-                  <ListItemText primary={activity.description} secondary={activity.date} />
-                </ListItem>
-              ))}
-            </List>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0}>
+            <Typography variant="h4" onClick={() => toggleSection('comments')} sx={{ cursor: 'pointer' }}>
+              Comments
+            </Typography>
+            <Collapse in={expandedSection === 'comments'}>
+              <CommentSection comments={comments} />
+            </Collapse>
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2">Project Details</Typography>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0} >
+            <Typography variant="h4">Project Details</Typography>
             <List>
               <ListItem>
                 <ListItemIcon>
@@ -200,8 +198,8 @@ const Project = () => {
             </List>
           </Paper>
 
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2">Team Members</Typography>
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0}>
+            <Typography variant="h4">Team Members</Typography>
             <List>
               {teamMembers.map((member, index) => (
                 <ListItem key={index}>
@@ -213,16 +211,19 @@ const Project = () => {
               ))}
             </List>
           </Paper>
-          <Paper sx={{ padding: 2, marginBottom: 3 }}>
-            <Typography variant="h2" onClick={() => toggleSection('comments')} sx={{ cursor: 'pointer' }}>
-              Comments
-            </Typography>
-            <Collapse in={expandedSection === 'comments'}>
-              <CommentSection comments={comments} />
-            </Collapse>
+
+          <Paper sx={{ padding: 2, marginBottom: 3 }} elevation={0}>
+            <Typography variant="h4">Recent Activities</Typography>
+            <List>
+              {recentActivities.map((activity, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={activity.description} secondary={activity.date} />
+                </ListItem>
+              ))}
+            </List>
           </Paper>
         </Grid>
-        </Grid>
+      </Grid>
     </Box>
   );
 };

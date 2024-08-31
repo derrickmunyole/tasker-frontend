@@ -109,11 +109,11 @@ function Home() {
 
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
-    <Typography variant="h4" gutterBottom>Dashboard</Typography>
+    <Typography variant="h1" gutterBottom>Dashboard</Typography>
     <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-            <StyledPaper>
-                <Typography variant="h6" gutterBottom>Project Overview</Typography>
+            <StyledPaper elevation={0}>
+                <Typography variant="h5" gutterBottom>Projects Overview</Typography>
                 {projectsData.map((project, index) => (
                     <Box key={index} sx={{ mb: 3 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
@@ -140,8 +140,8 @@ function Home() {
         <Grid item xs={12} md={4}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <StyledPaper>
-                        <Typography variant="h6" gutterBottom>Recent Activities</Typography>
+                    <StyledPaper elevation={0}>
+                        <Typography variant="h5" gutterBottom>Recent Activities</Typography>
                         <List>
                             {recentActivities.slice(0, 5).map((activity, index) => (
                                 <ListItem key={index} disablePadding>
@@ -160,8 +160,8 @@ function Home() {
                     </StyledPaper>
                 </Grid>
                 <Grid item xs={12}>
-                    <StyledPaper>
-                        <Typography variant="h6" gutterBottom>Recent Comments</Typography>
+                    <StyledPaper elevation={0}>
+                        <Typography variant="h5" gutterBottom>Recent Comments</Typography>
                         <CommentSection comments={comments.slice(0, 3)} compact={true} />
                     </StyledPaper>
                 </Grid>
@@ -169,8 +169,8 @@ function Home() {
         </Grid>
 
         <Grid item xs={12}>
-            <StyledPaper>
-                <Typography variant="h6" gutterBottom>Project Calendar</Typography>
+            <StyledPaper elevation={0}>
+                <Typography variant="h5" gutterBottom>Project Calendar</Typography>
                 <Box sx={{ height: 400 }}>
                     <Calendar
                         localizer={localizer}

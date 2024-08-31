@@ -21,7 +21,6 @@ import {
   Height
 } from '@mui/icons-material';
 import CreateProjectModal from '../createprojectmodal/CreateProjectModal';
-import { position } from '@chakra-ui/react';
 
 const SidebarContainer = styled(Drawer)(({ theme }) => ({
   width: 240,
@@ -36,7 +35,7 @@ const SidebarContainer = styled(Drawer)(({ theme }) => ({
     marginTop: '64px', // Add top margin to account for navbar
     overflowY: 'auto', // Allow sidebar to scroll if content is too long
     flexShrink: 0,
-
+    paddingTop: theme.spacing(4),
   },
 }));
 
@@ -63,7 +62,7 @@ function Sidebar() {
     { text: 'Inbox', icon: <InboxIcon />, to: '/inbox' },
     { text: 'Today', icon: <TodayIcon />, to: '/today' },
     { text: 'Assigned to me', icon: <AssignedIcon />, to: '/assigned' },
-    { text: 'Project', icon: <ProjectIcon />, to: '/project' },
+    { text: 'Projects', icon: <ProjectIcon />, to: '/projects' },
     { text: 'Create Project', icon: <CreateIcon />, onClick: onOpen },
     { text: 'Manage Projects', icon: <ManageIcon />, to: '/manage-projects' },
   ];

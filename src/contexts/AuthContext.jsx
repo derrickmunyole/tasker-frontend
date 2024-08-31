@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import apiClient from '../api/apiClient';
 
 const AuthContext = createContext(null);
 
@@ -9,14 +10,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/user/check-auth', {
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        const data = await response.json();
-        setIsAuthenticated(data.isAuthenticated);
+        const response = await apiClient.get('/user/check-auth');
+        setIsAuthenticated(response.data.isAuthenticated);
       } catch (error) {
         console.error('Auth check failed', error);
         setIsAuthenticated(false);
@@ -24,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
-
+  
     checkAuth();
   }, []);
 

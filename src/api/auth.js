@@ -1,4 +1,4 @@
-import { post, get } from "./apiClient";
+import apiClient from "./apiClient";
 
 const registerUser = async (username, email, password) => {
   try {
@@ -13,9 +13,7 @@ const registerUser = async (username, email, password) => {
 
 const loginUser = async (email, password) => {
   try {
-      const response = await post('/user/login', { email, password }, {
-          withCredentials: true 
-      });
+      const response = await apiClient.post('/user/login', { email, password });
       
       console.log(response.data);
       
@@ -35,9 +33,7 @@ const loginUser = async (email, password) => {
 
 const getUserInfo = async () => {
   try {
-    const response = await get('/user/info', {
-      withCredentials: true
-    });
+    const response = await apiClient.get('/user/info')
 
     
     if (response?.status == 200) {

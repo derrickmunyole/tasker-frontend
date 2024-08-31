@@ -13,48 +13,76 @@ import AppRoutes from './Routes';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0F286B', // Primary color
-      contrastText: '#FFFFFF', // Text color for primary buttons
+      main: '#0F286B', 
+      contrastText: '#FFFFFF', 
     },
     secondary: {
-      main: '#CC5500', // Secondary color
-      contrastText: '#FFFFFF', // Text color for secondary buttons
+      main: '#CC5500', 
+      contrastText: '#FFFFFF', 
     },
     background: {
-      default: '#F5F5F5', // Default background color
-      paper: '#FFFFFF', // Background color for paper components
+      default: '#F5F5F5', 
+      paper: '#FFFFFF', 
     },
     text: {
-      primary: '#0F286B', // Primary text color
-      secondary: '#CC5500', // Secondary text color
-      disabled: '#BDBDBD', // Disabled text color
-      hint: '#757575', // Hint text color
+      primary: '#0F286B', 
+      secondary: '#CC5500', 
+      disabled: '#BDBDBD', 
+      hint: '#757575', 
     },
     accent: {
-      main: '#FF4081', // Accent color
+      main: '#FF4081', 
     },
     error: {
-      main: '#F44336', // Error color
+      main: '#F44336', 
     },
     warning: {
-      main: '#FF9800', // Warning color
+      main: '#FF9800', 
     },
     info: {
-      main: '#2196F3', // Info color
+      main: '#2196F3', 
     },
     success: {
-      main: '#4CAF50', // Success color
+      main: '#4CAF50', 
     },
   },
   typography: {
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
     h1: {
-      fontSize: '2.2rem',
-      fontWeight: 500,
+      fontSize: '1.5rem',
+      fontWeight: 700,
     },
     h2: {
-      fontSize: '1.8rem',
+      fontSize: '1.5rem',
+      fontWeight: 600,
+    },
+    h3: {
+      fontSize: '1.5rem',
       fontWeight: 500,
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 400,
+    },
+    h5: {
+      fontSize: '1.5rem',
+      fontWeight: 300,
+    },
+    subtitle1: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+    },
+    subtitle2: {
+      fontSize: '1.125rem',
+      fontWeight: 500,
+      },
+    body1: {
+      fontSize: '1rem',
+      fontWeight: 400,
+    },
+    body2: {
+      fontSize: '1rem',
+      fontWeight: 300,
     },
     button: {
       textTransform: 'none', // Prevents automatic uppercase transformation
@@ -71,7 +99,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 4, // Default border radius
+    borderRadius: 4,
   },
   transitions: {
     easing: {

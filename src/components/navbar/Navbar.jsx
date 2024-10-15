@@ -15,6 +15,23 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import {
+  Avatar,
+  Popover,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from '@mui/material';
+import {
+  Settings as SettingsIcon,
+  ExitToApp as LogoutIcon,
+} from '@mui/icons-material';
+import apiClient from '../../api/apiClient';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -65,9 +82,62 @@ const NavbarContainer = styled(Box)({
   // Add any other styles you need for the navbar
 });
 
+const CustomProfileMenu = ({ anchorEl, open, onClose, onLogout }) => {
+  return (
+    <Popover
+      anchorEl={anchorEl}
+      open={open}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+    >
+      <Box sx={{ width: 250, p: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Avatar sx={{ mr: 2 }}>JD</Avatar>
+          <Box>
+            <Typography variant="subtitle1">John Doe</Typography>
+            <Typography variant="body2" color="textSecondary">
+              john.doe@example.com
+            </Typography>
+          </Box>
+        </Box>
+        <Divider />
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <AccountCircle />
+            </ListItemIcon>
+            <ListItemText primary="My Profile" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
+          <ListItem button onClick={onLogout}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </List>
+      </Box>
+    </Popover>
+  );
+};
+
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -83,6 +153,27 @@ export default function Navbar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleLogout = async () => {
+    console.log('Logging out...');
+    try {
+      const response = await apiClient.post('/user/logout');
+      console.log('Logout response:', response);
+      
+      if (response.statusText === 'OK') {
+        console.log('Logout successful');
+        setIsAuthenticated(false); 
+        
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      
+      navigate('/login');
+    }
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -237,7 +328,12 @@ export default function Navbar() {
         </Toolbar>
       </StyledAppBar>
       {renderMobileMenu}
-      {renderMenu}
+      <CustomProfileMenu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          onLogout={handleLogout}
+        />
     </Box>
     </NavbarContainer>
   );

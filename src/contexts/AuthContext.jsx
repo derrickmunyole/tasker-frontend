@@ -8,20 +8,41 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = async (navigate) => {
+      const timeoutDuration = 5000;
+      let timeoutId;
+  
       try {
-        const response = await apiClient.get('/user/check-auth');
-        setIsAuthenticated(response.data.isAuthenticated);
+        const authPromise = apiClient.get('/user/check-auth');
+        
+        const timeoutPromise = new Promise((_, reject) => {
+          timeoutId = setTimeout(() => {
+            reject(new Error('Authentication check timed out'));
+          }, timeoutDuration);
+        });
+  
+        const response = await Promise.race([authPromise, timeoutPromise]);
+  
+        if (response.data.isAuthenticated) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          console.log('User is not authenticated');
+        }
       } catch (error) {
-        console.error('Auth check failed', error);
+        console.error('Error checking authentication:', error);
         setIsAuthenticated(false);
+        if (navigate) {
+          navigate('/login');
+        }
       } finally {
+        clearTimeout(timeoutId);
         setIsLoading(false);
       }
     };
-  
-    checkAuth();
-  }, []);
+
+  checkAuth();
+}, [isAuthenticated]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isLoading }}>

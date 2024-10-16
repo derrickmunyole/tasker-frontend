@@ -3,6 +3,9 @@ import { Box, styled } from '@mui/material';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
 import { Outlet } from 'react-router-dom';
+import { UserProvider } from '../../contexts/UserContext';
+import { TasksProvider } from '../../contexts/TaskContext';
+import { ProjectProvider } from '../../contexts/ProjectContext';
 
 const LayoutContainer = styled(Box)({
   display: 'flex',
@@ -34,17 +37,23 @@ const MainContent = styled(Box)(({ theme }) => ({
 function Layout() {
   return (
     <LayoutContainer>
-      <NavbarWrapper>
-        <Navbar />
-      </NavbarWrapper>
-      <ContentWrapper>
-        <SidebarWrapper>
-          <Sidebar />
-        </SidebarWrapper>
-        <MainContent>
-          <Outlet />
-        </MainContent>
-      </ContentWrapper>
+      <UserProvider>
+        <TasksProvider>
+          <ProjectProvider>
+            <NavbarWrapper>
+              <Navbar />
+            </NavbarWrapper>
+            <ContentWrapper>
+              <SidebarWrapper>
+                <Sidebar />
+              </SidebarWrapper>
+              <MainContent>
+                <Outlet />
+              </MainContent>
+            </ContentWrapper>
+          </ProjectProvider>
+        </TasksProvider>
+      </UserProvider>
     </LayoutContainer>
   );
 }

@@ -1,19 +1,38 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import projectsApi from '../api/projectsApi';
+import { indexedDbManager } from '../utils/indexedDB'
 
 const ProjectContext = createContext();
+
+const projectsDBManager = indexedDbManager('projects');
 
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (forceRefresh=false) => {
+    if(!forceRefresh) {
+      const cachedProjects = await projectsDBManager.getAllRecords();
+      if(cachedProjects.length > 0) {
+        setProjects(cachedProjects);
+        console.log(`CACHED PROJECTS: ${JSON.stringify(cachedProjects)}`)
+        return cachedProjects;
+      }
+    }
+
     try {
       const response = await projectsApi.getAllProjects();
-      setProjects(response.data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
+      setProjects(response.data)
+      await projectsDBManager.clearRecords();
+      await Promise.all(response.data.map(project => {
+        console.log(`Project: ${project}`)
+        projectsDBManager.addRecord(project)
+      }));
+      return response.data;
+    } catch(error) {
+      console.error(`Error fetching projects: ${error}`)
+      throw error
+    } 
   }, []);
 
   const createProject = useCallback(async (projectData) => {
@@ -41,13 +60,13 @@ export const ProjectProvider = ({ children }) => {
   // Add other methods like updateProject, deleteProject, etc.
 
   return (
-    <ProjectContext.Provider 
-      value={{ 
-        projects, 
-        currentProject, 
-        fetchProjects, 
-        createProject, 
-        fetchProjectById 
+    <ProjectContext.Provider
+      value={{
+        projects,
+        currentProject,
+        fetchProjects,
+        createProject,
+        fetchProjectById
       }}
     >
       {children}

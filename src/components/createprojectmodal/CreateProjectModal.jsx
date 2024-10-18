@@ -7,24 +7,51 @@ import {
   Button,
   TextField,
   Stack,
-  IconButton
+  IconButton,
+  Box,
+  Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useProjects } from '../../contexts/ProjectContext';
+import SuccessIndicator from '../../components/successcomponent/SuccessWidget';
 
 function CreateProjectModal({ isOpen, onClose }) {
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleCreateProject = () => {
-    // Implement project creation logic here
-    console.log('Creating project:', { title, description });
-    onClose();
+  const { createProject, fetchProjects } = useProjects();
+
+  const handleCreateProject = async () => {
+    try {
+      await createProject({ name, description });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
+      fetchProjects(true)
+    } catch (error) {
+      console.error('Error creating project:', error);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      PaperProps={{
+        style: {
+          backgroundColor: 'white',
+          boxShadow: 'none',
+        },
+      }}
+    >
+
       <DialogTitle>
-        Create New Project
+        {!showSuccess && "Create New Project"}
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -38,31 +65,43 @@ function CreateProjectModal({ isOpen, onClose }) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ mt: 2 }}>
-          <TextField
-            label="Title"
-            variant="outlined"
-            fullWidth
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Stack>
+        <Box sx={{ minHeight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          {showSuccess ? (
+            <>
+              <SuccessIndicator />
+              <Typography variant="h6" sx={{ mt: 6 }}>Project created</Typography>
+            </>
+          ) : (
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <TextField
+                label="Description"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Stack>
+          )}
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleCreateProject}>
-          Create Project
-        </Button>
-      </DialogActions>
+
+      {!showSuccess && (
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleCreateProject}>
+            Create Project
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

@@ -12,19 +12,19 @@ const initDB = async (storeName) => {
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStoreName(storeName, { keyPath: 'id' })
+                db.createObjectStore(storeName, { keyPath: 'id' })
             }
         };
     });
 };
 
-const createIndexedDbManager = (storeName) => ({
+export const indexedDbManager = (storeName) => ({
     async getAllRecords() {
-        const db = await initDB();
+        const db = await initDB(storeName);
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeName, 'readonly');
             const store =  transaction.objectStore(storeName);
-            request = store.getAllRecords()
+            const request = store.getAll();
 
             request.onerror = () => reject(request.error)
             request.onsuccess = () => resolve(request.result)
@@ -32,11 +32,11 @@ const createIndexedDbManager = (storeName) => ({
     },
 
     async addRecord(item) {
-        const db = await initDB();
+        const db = await initDB(storeName);
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeName, 'readwrite');
             const store = transaction.objectStore(storeName);
-            request = store.addRecord(item);
+            const request = store.add(item);
 
             request.onerror = () => reject(request.error);
             request.onsuccess = () => resolve(resolve.result);
@@ -44,11 +44,11 @@ const createIndexedDbManager = (storeName) => ({
     },
 
     async deleteRecord(item) {
-        const db = await initDB();
+        const db = await initDB(storeName);
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeName, 'readwrite');
             const store = transaction.objectStore(storeName);
-            request = store.deleteRecord(item)
+            const request = store.delete(item)
 
             request.onerror = () => reject(request.error)
             request.onsuccess = () => resolve(request.result);
@@ -56,11 +56,11 @@ const createIndexedDbManager = (storeName) => ({
     },
 
     async clearRecords() {
-        const db = await initDB();
+        const db = await initDB(storeName);
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeName, 'readwrite');
             const store = transaction.objectStore(storeName);
-            request = store.clearRecords();
+            const request = store.clear();
 
             request.onerror = () => reject(request.error);
             request.onsuccess = () => resolve(request.result);

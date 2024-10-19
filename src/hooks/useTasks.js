@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTasksContext } from '../contexts/TaskContext';
 import { useProjects } from '../contexts/ProjectContext';
+import taskApi from '../api/tasksAPi';
 
 export const useTasks = () => {
   const { tasks, fetchTasks } = useTasksContext();
@@ -22,6 +23,7 @@ export const useTasks = () => {
       await fetchTasks();
       setIsLoading(false);
     } catch (err) {
+      console.error(`Error loading tasks: ${err}`)
       setError('Failed to load tasks');
       setIsLoading(false);
     }
@@ -66,7 +68,7 @@ export const useTasks = () => {
   }, [datePickerType, handleSetDueDate, handleSetReminder]);
 
   const handleDatePickerOpen = (event, type, taskId) => {
-    event.stopPropagation(); // Prevent event bubbling
+    event.stopPropagation(); 
     setDatePickerType(type);
     setSelectedTaskId(taskId);
     setIsDatePickerOpen(true);
@@ -79,9 +81,17 @@ export const useTasks = () => {
     setSelectedTask(null);
   }, []);
 
-  const handleAddTask = useCallback(() => {
-    // Implement add task logic here
-    console.log('Adding new task:', newTask);
+  const handleAddTask = useCallback(async (taskItem) => {
+    if(!taskItem.trim()) return;
+    try {
+      const response = await taskApi.createTask({title: taskItem})
+      setNewTask(prevTasks => [...prevTasks, response.data]);
+      console.log(response.data)
+      fetchTasks(true);
+      return response.data;
+    } catch (error) {
+      
+    }
     setNewTask('');
   }, [newTask]);
 

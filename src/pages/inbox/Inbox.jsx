@@ -54,6 +54,8 @@ function Inbox() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [filters, setFilters] = useState(['all']);
+  const [title, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const toggleFilter = (filter) => {
     setFilters(prevFilters => {
@@ -124,10 +126,18 @@ function Inbox() {
           placeholder="Add a new task..."
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
+          onKeyDown={(e) => {
+            if(e.key === 'Enter') {
+              handleAddTask(newTask);
+              setNewTask('');
+            }
+          }}
           InputProps={{
             endAdornment: (
-              <IconButton onClick={handleAddTask}>
+              <IconButton onClick={() => {
+                handleAddTask(newTask);
+                setNewTask();
+              }}>
                 <AddIcon />
               </IconButton>
             ),

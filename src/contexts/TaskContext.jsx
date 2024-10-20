@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useCallback, useMemo } from 'react';
 import taskApi from '../api/tasksAPi';
 import { indexedDbManager } from '../utils/indexedDB';
+import { fetchFunctionFactory } from '../utils/fetchUtils';
 
 const TasksContext = createContext();
 
@@ -10,38 +11,15 @@ export const TasksProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
-  const fetchTasks = useCallback(async (forceRefresh=false) => {
-    if(!forceRefresh) {
-      const cachedTasks = await tasksDBManager.getAllRecords();
-      if(cachedTasks.length > 0) {
-        setTasks(cachedTasks);
-        console.log(`CACHED TASKS: ${JSON.stringify(cachedTasks)}`)
-        return cachedTasks;
-      }
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await taskApi.getAllTasks();
-      console.log(`TASKS: ${response}`)
-      if (response && response.data) {
-        setTasks(response.data.tasks);
-        await tasksDBManager.clearRecords();
-        await Promise.all(tasks.map(task => {
-          console.log(`Task: ${task}`)
-          tasksDBManager.addRecord(task)
-        }))
-      } else {
-        throw new Error('Invalid response format');
-      }
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setError('Failed to fetch tasks. Please try again later.');
-      setIsLoading(false);
-    }
-  }, []);
+  const fetchTasks = fetchFunctionFactory(
+    taskApi.getAllTasks,
+    tasksDBManager,
+    setTasks,
+    setIsLoading,
+    setError
+  )
 
   const addTask = useCallback(async (newTaskData) => {
     try {

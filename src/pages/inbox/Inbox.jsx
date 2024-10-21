@@ -46,7 +46,8 @@ function Inbox() {
     handleDatePickerClose,
     isDatePickerOpen,
     handleAddTask,
-    fetchProjects
+    fetchProjects,
+    handleTaskUpdate
   } = useTasks();
 
   const { handleAddRecurringTask } = useRecurringTasks();
@@ -67,6 +68,7 @@ function Inbox() {
     });
   };
 
+
   const taskList = useMemo(() => (
     <List>
       {tasks.map((task) => (
@@ -75,10 +77,11 @@ function Inbox() {
           task={task}
           onActionClick={handleActionClick}
           onDatePickerOpen={handleDatePickerOpen}
+          onTaskUpdate={handleTaskUpdate}
         />
       ))}
     </List>
-  ), [tasks, handleActionClick, handleDatePickerOpen]);
+  ), [tasks, handleActionClick, handleDatePickerOpen, handleTaskUpdate]);
 
   const renderModalContent = useMemo(() => {
     switch (activeModal) {
@@ -136,7 +139,7 @@ function Inbox() {
             endAdornment: (
               <IconButton onClick={() => {
                 handleAddTask(newTask);
-                setNewTask();
+                setNewTask('');
               }}>
                 <AddIcon />
               </IconButton>

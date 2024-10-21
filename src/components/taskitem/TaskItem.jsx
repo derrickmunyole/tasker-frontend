@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { ReactSVG } from "react-svg";
 import { TextField, Modal, Box, Typography, Button } from "@mui/material";
 import './TaskItem.css'
+import AddToProjectIcon from "../../assets/icons/AddToProject";
+import AddEvent from "../../assets/icons/AddEvent";
+import PersonAdd from "../../assets/icons/PersonAdd";
+import AddReminder from "../../assets/icons/AddReminder";
+import AddRepeat from "../../assets/icons/AddRepeat";
+import EditTask from "../../assets/icons/EditTask";
 
 
 function TaskItem({ task, onActionClick, onDatePickerOpen, onTaskUpdate }) {
@@ -18,7 +24,7 @@ function TaskItem({ task, onActionClick, onDatePickerOpen, onTaskUpdate }) {
   };
 
   const handleTitleDoubleClick = (e) => {
-    e.stopPropagation(); // Prevent expansion
+    e.stopPropagation(); 
     setIsEditing(true);
   };
 
@@ -74,6 +80,7 @@ function TaskItem({ task, onActionClick, onDatePickerOpen, onTaskUpdate }) {
       </div>
       {expanded && (
         <div className="task-actions">
+        <div className="task-actions">
           <ReactSVG src="/src/assets/icons/create_new_folder.svg" onClick={() => onActionClick('addToProject', task)} />
           <ReactSVG src="/src/assets/icons/person_add.svg" onClick={() => onActionClick('assign', task)} />
           <ReactSVG
@@ -86,8 +93,8 @@ function TaskItem({ task, onActionClick, onDatePickerOpen, onTaskUpdate }) {
             src="/src/assets/icons/event.svg"
             onClick={(e) => onDatePickerOpen(e, 'dueDate', task.id)}
           />
-
         </div>
+      </div>
       )}
 
       <Modal

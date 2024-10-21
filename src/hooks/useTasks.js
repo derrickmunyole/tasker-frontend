@@ -85,15 +85,24 @@ export const useTasks = () => {
     if(!taskItem.trim()) return;
     try {
       const response = await taskApi.createTask({title: taskItem})
-      setNewTask(prevTasks => [...prevTasks, response.data]);
-      console.log(response.data)
-      fetchTasks(true);
+      fetchTasks(true)
       return response.data;
     } catch (error) {
       
     }
     setNewTask('');
   }, [newTask]);
+
+  const handleTaskUpdate = useCallback(async (taskId, taskData) => {
+    if(!taskId || !taskData) return;
+    try {
+      const response = await taskApi.updateTask(taskId, taskData);
+      console.log(`UPDATE TASK RESPONSE: ${response}`)
+      fetchTasks(true)
+    } catch (error) {
+      console.error(`Failed to update task: ${error}`)
+    }
+  })
 
   return {
     tasks,
@@ -116,6 +125,7 @@ export const useTasks = () => {
     handleDatePickerClose,
     isDatePickerOpen,
     handleAddTask,
-    fetchProjects
+    fetchProjects,
+    handleTaskUpdate
   };
 };

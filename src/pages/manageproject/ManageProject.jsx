@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -20,10 +20,14 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
+import apiClient from '../../api/apiClient';
+import { getUserPreference } from '../../api/auth';
 
 function ManageProject() {
   const theme = useTheme();
-  const [viewMode, setViewMode] = useState('list');
+  const [viewMode, setViewMode] = useState(() => {
+    return localStorage.getItem('manageprojectViewMode') || 'list';
+  });
 
   const projects = [
     { id: 1, name: "Website Redesign", duration: "3 months", deadline: "2024-11-30", status: "In Progress" },
@@ -40,9 +44,30 @@ function ManageProject() {
     console.log(`Deleting project with id: ${projectId}`);
   };
 
-  const toggleView = (mode) => {
+  const fetchUserPreference = async () => {
+    try {
+      const response =  await getUserPreference();
+      setViewMode(response?.viewMode)
+    } catch (error) {
+      console.error(`Error fetching user preference: ${error}`)
+    }
+
+  }
+
+  const toggleView = async (mode) => {
     setViewMode(mode);
+    localStorage.setItem('manageprojectViewMode', mode);
+    try {
+      const response = await apiClient.post('/user/ui-preferences', {viewMode: mode});
+      console.log(response);
+    } catch (error) {
+      console.error(`Error storing user preference: ${error}`)
+    }
   };
+
+  useEffect(() => {
+    fetchUserPreference();
+  }, [])
 
   const ListView = () => (
     <TableContainer component={Paper}>

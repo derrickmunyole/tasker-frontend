@@ -1,4 +1,5 @@
 import apiClient from "./apiClient";
+import { STATUS_CODES } from "../constants/statusCodes";
 
 const registerUser = async (username, email, password) => {
   try {
@@ -13,30 +14,44 @@ const registerUser = async (username, email, password) => {
 
 const loginUser = async (email, password) => {
   try {
-      const response = await apiClient.post('/user/login', { email, password });
+    const response = await apiClient.post('/user/login', { email, password });
+    
+    console.log(response.data);
+    
+    if (response.data.success) {
       
-      console.log(response.data);
+      localStorage.setItem('isLoggedIn', 'true');
       
-      if (response.data.success) {
-         
-          localStorage.setItem('session_id', response.data.session_id);
-          
-          return response;
-      } else {
-          throw new Error(response.data.message || 'Login failed');
-      }
+      return response;
+    } else {
+      throw new Error(response.data.message || 'Login failed');
+    }
   } catch (error) {
-      console.error('There was an error logging in', error);
-      throw error;
+    console.error('There was an error logging in', error);
+    throw error;
   }
 }
+
+
+const logoutUser = async () => {
+  try {
+    const response = await apiClient.post('/user/logout');
+    console.log(response.data);
+    localStorage.removeItem('isLoggedIn');
+    return response;
+  } catch (error) {
+    console.error('There was an error logging out', error);
+    throw error;
+  }
+};
+
 
 const getUserInfo = async () => {
   try {
     const response = await apiClient.get('/user/info')
 
     
-    if (response?.status == 200) {
+    if (response?.status == STATUS_CODES.OK) {
       return response.data;
     } else {
       throw new Error(response.data.message || 'Failed to fetch user info');
@@ -47,4 +62,20 @@ const getUserInfo = async () => {
   }
 };
 
-export { registerUser, loginUser, getUserInfo };
+
+const getUserPreference = async () => {
+  try {
+      const response = await apiClient.get('/user/ui-preferences');
+
+      if (response?.status == STATUS_CODES.OK) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch ui preference');
+    }
+  } catch (error) {
+    console.error('There was an error ui preference ', error);
+    throw error;
+  }
+}
+
+export { registerUser, loginUser, logoutUser, getUserInfo, getUserPreference };

@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import { useProjects } from '../../contexts/ProjectContext';
+import { useTasksContext } from '../../contexts/TaskContext';
 import styles from './AddToProjectContent.module.css';
 
 
-  function AddToProjectContent({ task, onClose }) {
+
+function AddToProjectContent({ task, onClose }) {
   const { projects } = useProjects();
+  const { assignToProject } = useTasksContext();
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleAdd = (projectId) => {
-    // Implement the logic to assign the task to the selected project
+  const handleAdd = async (projectId) => {
     console.log(`Assigning task ${task.id} to project ${projectId}`);
-    
-    // Show success message
-    setSuccessMessage(`Task "${task.title}" added to project successfully!`);
-    
-    // Close the modal after a delay
+    try {
+      const response = await assignToProject(task.id, projectId);
+      console.log(`ADDING TO PROJECT: ${JSON.stringify(response)}`)
+      if (response?.success === true) {
+        setSuccessMessage(`Task "${task.title}" added to project successfully!`);
+      }
+    } catch (error) {
+      console.error(`Error adding to project: ${error}`);
+    }
+
+
+
     setTimeout(() => {
       onClose();
     }, 3000);

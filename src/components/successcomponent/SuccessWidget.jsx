@@ -1,6 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
-import animationData from '../../assets/animations/loading.json';
+import animationData from '../../assets/animations/success.json';
 
 const defaultOptions = {
     loop: true,
@@ -11,7 +11,7 @@ const defaultOptions = {
     }
 };
 
-function LoadingIndicator() {
+function SuccessIndicator() {
     return (
         <div style={containerStyle}>
             <Lottie options={defaultOptions} height={100} width={100} />
@@ -31,4 +31,4 @@ const containerStyle = {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
 };
 
-export default LoadingIndicator;
+export default SuccessIndicator;

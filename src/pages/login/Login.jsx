@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Stack, Typography, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import './Login.css';
 import { loginUser } from '../../api/auth';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,7 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const { setIsAuthenticated } = useAuth();
+    const { isAuthenticated, setIsAuthenticated } = useAuth();
 
     const navigate = useNavigate();
 
@@ -49,6 +50,13 @@ const Login = () => {
             setErrors(validationErrors);
         }
     };
+    
+    useEffect(() => {
+        console.log('isAuthenticated:', isAuthenticated);
+        if (isAuthenticated) {
+            navigate('/home');
+          }
+      }, [isAuthenticated]);
 
     return (
         <div className='container'>

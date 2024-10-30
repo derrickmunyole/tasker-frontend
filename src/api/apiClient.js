@@ -2,37 +2,53 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:5000/api',
-  withCredentials: true,
+  withCredentials: true, 
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
 });
 
 let isRefreshing = false;
-let failedQueue = [];
+let refreshSubscribers = [];
 
-const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  
-  failedQueue = [];
+const addRefreshSubscriber = (callback) => {
+  refreshSubscribers.push(callback);
 };
 
+const onSessionRefreshed = (error) => {
+  refreshSubscribers.forEach((callback) => callback(error));
+  refreshSubscribers = [];
+};
+
+/**
+ * Intercepts API responses to handle authentication errors and token refresh.
+ * 
+ * @param {Function} onFulfilled - Callback for successful responses.
+ * @param {Function} onRejected - Callback for error responses.
+ * @returns {Promise} A promise that resolves with the API response or rejects with an error.
+ * 
+ * @description
+ * This interceptor handles 401 (Unauthorized) errors by attempting to refresh the session.
+ * If a refresh is already in progress, it queues the original request to be retried after the refresh.
+ * If the refresh is successful, it retries the original request.
+ * If the refresh fails, it redirects to the login page.
+ */
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        }).then(token => {
-          return apiClient(originalRequest);
-        }).catch(err => {
-          return Promise.reject(err);
+          addRefreshSubscriber((err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(apiClient(originalRequest));
+            }
+          });
         });
       }
 
@@ -40,28 +56,17 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const sessionId = localStorage.getItem('session_id');
+        const response = await apiClient.post('/user/refresh-session');
 
-        if (!sessionId) {
-          // Handle the case where sessionId is not in localStorage
-          console.error('No session ID found in localStorage');
-          // Redirect to login or handle this case appropriately
-          window.location.href = '/login';
-          return Promise.reject(new Error('No session ID found'));
-        }
-        
-        const response = await apiClient.post('/user/refresh-token', { session_id: sessionId }, {
-          headers: {'content-type':'application/json'}
-        });
-        
         if (response.data.success) {
-          processQueue(null, response.data.accessToken);
+          onSessionRefreshed(null);
           return apiClient(originalRequest);
+        } else {
+          throw new Error('Session refresh failed');
         }
       } catch (refreshError) {
-        processQueue(refreshError, null);
-        localStorage.removeItem('session_id');
-        // Clear other session data (Redux store, etc.)
+        onSessionRefreshed(refreshError);
+        // Redirect to login page or handle session expiration
         window.location.href = '/login';
         return Promise.reject(refreshError);
       } finally {
@@ -72,6 +77,7 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export const get = (url) => apiClient.get(url);
 export const post = (url, data) => apiClient.post(url, data);

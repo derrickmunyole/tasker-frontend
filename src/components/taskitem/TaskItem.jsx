@@ -2,12 +2,6 @@ import React, { useState } from "react";
 import { ReactSVG } from "react-svg";
 import { TextField, Modal, Box, Typography, Button } from "@mui/material";
 import './TaskItem.css'
-import AddToProjectIcon from "../../assets/icons/AddToProject";
-import AddEvent from "../../assets/icons/AddEvent";
-import PersonAdd from "../../assets/icons/PersonAdd";
-import AddReminder from "../../assets/icons/AddReminder";
-import AddRepeat from "../../assets/icons/AddRepeat";
-import EditTask from "../../assets/icons/EditTask";
 
 
 function TaskItem({ task, onActionClick, onDatePickerOpen, onTaskUpdate }) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Paper, Typography, LinearProgress, Chip, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AccessTime, Assignment, Group, Flag } from '@mui/icons-material';
@@ -6,6 +6,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import CommentSection from '../../components/project/commentsection/CommentSection';
+import { useProjects } from '../../contexts/ProjectContext';
 
 const localizer = momentLocalizer(moment);
 
@@ -26,6 +27,8 @@ const ProgressBar = ({ value, color }) => (
 );
 
 function Home() {
+  const { projects, fetchProjects } = useProjects();
+
   const projectsData = [
     {
       name: "Project Phoenix",
@@ -92,7 +95,7 @@ function Home() {
     end: project.deadline,
     allDay: true,
   }));
-  
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -107,83 +110,92 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+    fetchProjects(true);
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
-    <Typography variant="h1" gutterBottom>Dashboard</Typography>
-    <Grid container spacing={3}>
+      <Typography variant="h1" gutterBottom>Dashboard</Typography>
+      <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-            <StyledPaper elevation={0}>
-                <Typography variant="h5" gutterBottom>Projects Overview</Typography>
-                {projectsData.map((project, index) => (
-                    <Box key={index} sx={{ mb: 3 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                            <Typography variant="subtitle1">{project.name}</Typography>
-                            <Box>
-                                <Chip label={`Deadline: ${project.deadline.toLocaleDateString()}`} icon={<AccessTime />} size="small" sx={{ mr: 1 }} />
-                                <Chip label={project.status} color={getStatusColor(project.status)} size="small" />
-                            </Box>
-                        </Box>
-                        <ProgressBar value={project.progress} color="primary" />
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                            <Typography variant="body2" color="text.secondary">
-                                <Assignment fontSize="small" /> Tasks: {Math.round(project.progress / 10)}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                <Group fontSize="small" /> Team Size: {project.teamSize}
-                            </Typography>
-                        </Box>
-                    </Box>
-                ))}
-            </StyledPaper>
+          <StyledPaper elevation={0}>
+            <Typography variant="h5" gutterBottom>Projects Overview</Typography>
+            {projects.map((project, index) => (
+              <Box key={index} sx={{ mb: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                  <Typography variant="subtitle1">{project.name}</Typography>
+                  <Box>
+                    <Chip
+                      label={`Deadline: ${project.deadline ? project.deadline.toLocaleString() : 'None'}`}
+                      icon={<AccessTime />}
+                      size="small" s
+                      x={{ mr: 1 }}
+                    />
+                    <Chip label={project.status} color={getStatusColor(project.status)} size="small" />
+                  </Box>
+                </Box>
+                <ProgressBar value={project.progress} color="primary" />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    <Assignment fontSize="small" /> Tasks: {Math.round(project.progress / 10)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <Group fontSize="small" /> Team Size: {project.teamSize}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </StyledPaper>
         </Grid>
 
         <Grid item xs={12} md={4}>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <StyledPaper elevation={0}>
-                        <Typography variant="h5" gutterBottom>Recent Activities</Typography>
-                        <List>
-                            {recentActivities.slice(0, 5).map((activity, index) => (
-                                <ListItem key={index} disablePadding>
-                                    <ListItemIcon>
-                                        <Flag color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={activity.text}
-                                        secondary={activity.date}
-                                        primaryTypographyProps={{ variant: 'body2' }}
-                                        secondaryTypographyProps={{ variant: 'caption' }}
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </StyledPaper>
-                </Grid>
-                <Grid item xs={12}>
-                    <StyledPaper elevation={0}>
-                        <Typography variant="h5" gutterBottom>Recent Comments</Typography>
-                        <CommentSection comments={comments.slice(0, 3)} compact={true} />
-                    </StyledPaper>
-                </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <StyledPaper elevation={0}>
+                <Typography variant="h5" gutterBottom>Recent Activities</Typography>
+                <List>
+                  {recentActivities.slice(0, 5).map((activity, index) => (
+                    <ListItem key={index} disablePadding>
+                      <ListItemIcon>
+                        <Flag color="primary" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={activity.text}
+                        secondary={activity.date}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                        secondaryTypographyProps={{ variant: 'caption' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </StyledPaper>
             </Grid>
+            <Grid item xs={12}>
+              <StyledPaper elevation={0}>
+                <Typography variant="h5" gutterBottom>Recent Comments</Typography>
+                <CommentSection comments={comments.slice(0, 3)} compact={true} />
+              </StyledPaper>
+            </Grid>
+          </Grid>
         </Grid>
 
         <Grid item xs={12}>
-            <StyledPaper elevation={0}>
-                <Typography variant="h5" gutterBottom>Project Calendar</Typography>
-                <Box sx={{ height: 400 }}>
-                    <Calendar
-                        localizer={localizer}
-                        events={calendarEvents}
-                        startAccessor="start"
-                        endAccessor="end"
-                        style={{ height: '100%' }}
-                    />
-                </Box>
-            </StyledPaper>
+          <StyledPaper elevation={0}>
+            <Typography variant="h5" gutterBottom>Project Calendar</Typography>
+            <Box sx={{ height: 400 }}>
+              <Calendar
+                localizer={localizer}
+                events={calendarEvents}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: '100%' }}
+              />
+            </Box>
+          </StyledPaper>
         </Grid>
-    </Grid>
-</Box>
+      </Grid>
+    </Box>
   );
 }
 

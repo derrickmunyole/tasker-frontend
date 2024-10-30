@@ -21,6 +21,7 @@ import {
   Height
 } from '@mui/icons-material';
 import CreateProjectModal from '../createprojectmodal/CreateProjectModal';
+import { theme } from '../../App';
 
 const SidebarContainer = styled(Drawer)(({ theme }) => ({
   width: 240,
@@ -40,14 +41,16 @@ const SidebarContainer = styled(Drawer)(({ theme }) => ({
 }));
 
 const SidebarLink = styled(RouterLink)(({ theme }) => ({
-  textDecoration: 'none',
-  color: 'inherit',
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(1, 2),
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
+  '&&': {
+    textDecoration: 'none',
+    color: theme.palette.primary.main,
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1, 2),
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  }
 }));
 
 
@@ -62,7 +65,7 @@ function Sidebar() {
     { text: 'Inbox', icon: <InboxIcon />, to: '/inbox' },
     { text: 'Today', icon: <TodayIcon />, to: '/today' },
     { text: 'Assigned to me', icon: <AssignedIcon />, to: '/assigned' },
-    { text: 'Projects', icon: <ProjectIcon />, to: '/projects' },
+    { text: 'Projects', icon: <ProjectIcon />, to: '/all-projects' },
     { text: 'Create Project', icon: <CreateIcon />, onClick: onOpen },
     { text: 'Manage Projects', icon: <ManageIcon />, to: '/manage-projects' },
   ];

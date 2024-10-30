@@ -1,6 +1,10 @@
 const DB_NAME = 'TaskerDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
+const STORES = [
+    {name: 'projects', keyPath: 'id'},
+    {name: 'tasks', keyPath: 'id'},
+]
 
 const initDB = async (storeName) => {
     return new Promise((resolve, reject) => {
@@ -11,12 +15,23 @@ const initDB = async (storeName) => {
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName, { keyPath: 'id' })
-            }
+            STORES.forEach(store => {
+                if (!db.objectStoreNames.contains(store.name)) {
+                    db.createObjectStore(store.name, { keyPath: store.keyPath})
+                }
+            })
         };
     });
 };
+
+export const initializeDatabase = async () => {
+    try {
+        await initDB();
+        console.log('Database initialization complete')
+    } catch (error) {
+        console.error('Database initialization failed')
+    }
+}
 
 export const indexedDbManager = (storeName) => ({
     async getAllRecords() {

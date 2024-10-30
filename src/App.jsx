@@ -5,90 +5,97 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { CssBaseline } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './contexts/AuthContext';
-import { UserProvider } from './contexts/UserContext';
-import { TasksProvider } from './contexts/TaskContext';
-import { ProjectProvider } from './contexts/ProjectContext';
 import AppRoutes from './Routes';
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     primary: {
-      main: '#0F286B', 
-      contrastText: '#FFFFFF', 
+      main: '#0F286B',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#CC5500', 
-      contrastText: '#FFFFFF', 
+      main: '#CC5500',
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#F5F5F5', 
-      paper: '#FFFFFF', 
+      default: '#F5F5F5',
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#0F286B', 
-      secondary: '#CC5500', 
-      disabled: '#BDBDBD', 
-      hint: '#757575', 
+      primary: '#0F286B',
+      secondary: '#CC5500',
+      disabled: '#BDBDBD',
+      hint: '#757575',
+      body: '#333333',
     },
     accent: {
-      main: '#FF4081', 
+      main: '#FF4081',
     },
     error: {
-      main: '#F44336', 
+      main: '#F44336',
     },
     warning: {
-      main: '#FF9800', 
+      main: '#FF9800',
     },
     info: {
-      main: '#2196F3', 
+      main: '#2196F3',
     },
     success: {
-      main: '#4CAF50', 
+      main: '#4CAF50',
     },
   },
   typography: {
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
     h1: {
       fontSize: '1.5rem',
-      fontWeight: 700,
+      fontWeight: 600,
+      color: '#0F286B'
     },
     h2: {
       fontSize: '1.5rem',
       fontWeight: 600,
+      color: '#0F286B'
     },
     h3: {
       fontSize: '1.5rem',
       fontWeight: 500,
+      color: '#0F286B'
     },
     h4: {
       fontSize: '1.5rem',
       fontWeight: 400,
+      color: '#0F286B'
     },
     h5: {
       fontSize: '1.5rem',
       fontWeight: 300,
+      color: '#0F286B'
     },
     subtitle1: {
       fontSize: '1.25rem',
       fontWeight: 500,
+      color: '#0F286B'
     },
     subtitle2: {
       fontSize: '1.125rem',
       fontWeight: 500,
-      },
+      color: '#0F286B'
+    },
     body1: {
       fontSize: '1rem',
       fontWeight: 400,
+      color: '#0F286B',
     },
     body2: {
       fontSize: '1rem',
       fontWeight: 300,
+      color: '#57575e',
     },
     button: {
       textTransform: 'none', // Prevents automatic uppercase transformation
     },
   },
-  spacing: 8, 
+  spacing: 8,
   breakpoints: {
     values: {
       xs: 0,
@@ -144,7 +151,6 @@ const theme = createTheme({
       },
     },
   },
-  // ... other theme customizations
 });
 
 
@@ -153,13 +159,7 @@ const CompositeProvider = ({ children }) => (
     <CssBaseline />
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <AuthProvider>
-        <UserProvider>
-          <TasksProvider>
-            <ProjectProvider>
-              {children}
-            </ProjectProvider>
-          </TasksProvider>
-        </UserProvider>
+        {children}
       </AuthProvider>
     </LocalizationProvider>
   </ThemeProvider>

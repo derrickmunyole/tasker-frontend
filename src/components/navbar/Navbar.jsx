@@ -28,7 +28,6 @@ import {
   Settings as SettingsIcon,
   ExitToApp as LogoutIcon,
 } from '@mui/icons-material';
-import apiClient from '../../api/apiClient';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -82,7 +81,7 @@ const NavbarContainer = styled(Box)({
   // Add any other styles you need for the navbar
 });
 
-const CustomProfileMenu = ({ anchorEl, open, onClose, onLogout }) => {
+const CustomProfileMenu = ({ anchorEl, open, onClose, onLogout, onNavigate }) => {
   return (
     <Popover
       anchorEl={anchorEl}
@@ -109,13 +108,13 @@ const CustomProfileMenu = ({ anchorEl, open, onClose, onLogout }) => {
         </Box>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button onClick={() => onNavigate('Profile')}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
             <ListItemText primary="My Profile" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => onNavigate('Settings')}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
@@ -136,7 +135,7 @@ const CustomProfileMenu = ({ anchorEl, open, onClose, onLogout }) => {
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
@@ -158,23 +157,17 @@ export default function Navbar() {
   const handleLogout = async () => {
     console.log('Logging out...');
     try {
-      const response = await apiClient.post('/user/logout');
-      console.log('Logout response:', response);
-      
-      if (response.statusText === 'OK') {
-        console.log('Logout successful');
-        setIsAuthenticated(false); 
-        
-        window.location.href = '/login';
-      } else {
-        console.error('Logout failed:', response.data.message);
-      }
+      await logout();
     } catch (error) {
       console.error('Error during logout:', error);
-      
-      navigate('/login');
     }
   };
+
+  const handleNavigate = (route) => {
+    console.log("Navigating...")
+    route === 'Settings' ? navigate('/Settings'): navigate('/Profile')
+  }
+  
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -333,6 +326,7 @@ export default function Navbar() {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
           onLogout={handleLogout}
+          onNavigate={handleNavigate}
         />
     </Box>
     </NavbarContainer>
